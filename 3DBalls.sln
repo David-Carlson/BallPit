@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DBalls", "3DBalls\3DBalls\3DBalls.csproj", "{8D6D6A7F-F520-4CE3-86AC-A63D670707FB}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "3DBallsContent", "3DBalls\3DBallsContent\3DBallsContent.contentproj", "{30F3B7BB-4DC9-49C2-92E8-8854A584226E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D6D6A7F-F520-4CE3-86AC-A63D670707FB}.Debug|x86.ActiveCfg = Debug|x86
+		{8D6D6A7F-F520-4CE3-86AC-A63D670707FB}.Debug|x86.Build.0 = Debug|x86
+		{8D6D6A7F-F520-4CE3-86AC-A63D670707FB}.Release|x86.ActiveCfg = Release|x86
+		{8D6D6A7F-F520-4CE3-86AC-A63D670707FB}.Release|x86.Build.0 = Release|x86
+		{30F3B7BB-4DC9-49C2-92E8-8854A584226E}.Debug|x86.ActiveCfg = Debug|x86
+		{30F3B7BB-4DC9-49C2-92E8-8854A584226E}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
