@@ -11,7 +11,7 @@ namespace ShapeTest
 	{
 		public VertexBuffer vertexBuffer;
 		private IndexBuffer indexBuffer;
-		public static BasicEffect basicEffect;
+		public static Effect effect;
 		private static GraphicsDevice g;
 
 
@@ -43,10 +43,10 @@ namespace ShapeTest
 			indexBuffer.SetData(indices);
 		}
 
-		public static void SetQuad(GraphicsDevice g, BasicEffect basicEffect)
+		public static void SetQuad(GraphicsDevice g, Effect effect)
 		{
 			Quad.g = g;
-			Quad.basicEffect = basicEffect;
+			Quad.effect = effect;
 		}
 
 		public void Draw()
@@ -58,12 +58,10 @@ namespace ShapeTest
 			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
 			g.RasterizerState = rasterizerState;
 
-			foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
+			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
 			{
-				pass.Apply();
-				//GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
-				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);
-				//GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 12, 0, 20);
+				pass.Apply();				
+				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);				
 			}
 		}
 	}

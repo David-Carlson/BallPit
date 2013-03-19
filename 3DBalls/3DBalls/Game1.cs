@@ -22,12 +22,15 @@ namespace _3DBalls
 
 		TexturedQuad texQuad1, texQuad2;
 		Quad quad1, quad2;
-		BasicEffect basicEffect;
+		Effect effect;
+		BasicEffect s;
+		Model beachBall;
 
 		Matrix world = Matrix.CreateTranslation(0, 0, 0);
 		Matrix view = Matrix.CreateLookAt(new Vector3(10, 10, 10), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
 		Matrix projection = Matrix.CreatePerspectiveFieldOfView(
 			MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
+		Vector3 viewVector;
 
 		public Game1()
 		{
@@ -56,25 +59,29 @@ namespace _3DBalls
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-			basicEffect = new BasicEffect(graphics.GraphicsDevice);
+			effect = Content.Load<Effect>("Effects/TexturedShader");
+			BasicEffect basicEffect = new BasicEffect(graphics.GraphicsDevice);
 			basicEffect.EnableDefaultLighting();
 			basicEffect.World = world;
 			basicEffect.View = view;
 			basicEffect.Projection = projection;
-			basicEffect.VertexColorEnabled = false; //Was true
+			basicEffect.VertexColorEnabled = true;
 			basicEffect.LightingEnabled = false;
-			basicEffect.TextureEnabled = true; // was false
+			basicEffect.TextureEnabled = false;
 
 			Quad.SetQuad(graphics.GraphicsDevice, basicEffect);
 			TexturedQuad.SetQuad(graphics.GraphicsDevice, basicEffect);
-			Texture2D texture = Content.Load<Texture2D>("BeachBallTexture");
+			Texture2D texture = Content.Load<Texture2D>(@"Models/BeachBallTexture");
+			beachBall = Content.Load<Model>(@"Models/BeachBall");
+
+			viewVector = -new Vector3(1, 1, 1);
 
 			/*quad1 = new Quad(Color.Yellow,
 				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
 				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
 			quad2 = new Quad(Color.Silver,
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
-				new Vector3(0, 5, 0), new Vector3(0, -5, 0));	*/		
+				new Vector3(0, 5, 0), new Vector3(0, -5, 0));*/		
 
 			texQuad1 = new TexturedQuad(texture,
 				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
@@ -122,12 +129,31 @@ namespace _3DBalls
 			/*quad1.Draw();
 			quad2.Draw();//*/
 
-			texQuad1.Draw();
-			texQuad2.Draw();
+			//texQuad1.Draw();
+			//texQuad2.Draw();
+			DrawModelWithEffect(beachBall, world, view, projection);
 
 			// TODO: Add your drawing code here
 
 			base.Draw(gameTime);
+		}
+		private void DrawModelWithEffect(Model model, Matrix world, Matrix view, Matrix projection)
+		{
+			foreach (ModelMesh mesh in model.Meshes)
+			{
+				foreach (ModelMeshPart part in mesh.MeshParts)
+				{
+					part.Effect = effect;
+					effect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
+					effect.Parameters["View"].SetValue(view);
+					effect.Parameters["Projection"].SetValue(projection);
+					effect.Parameters["ViewVector"].SetValue(viewVector);
+
+					Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(mesh.ParentBone.Transform * world));
+					effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
+				}
+				mesh.Draw();
+			}
 		}
 	}
 }

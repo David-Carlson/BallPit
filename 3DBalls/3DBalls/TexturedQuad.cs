@@ -12,7 +12,7 @@ namespace _3DBalls
 		public VertexBuffer vertexBuffer;
 		private IndexBuffer indexBuffer;
 		private Texture2D texture;
-		public static BasicEffect basicEffect;
+		public static Effect effect;
 		private static GraphicsDevice g;
 
 
@@ -44,10 +44,10 @@ namespace _3DBalls
 			indexBuffer.SetData(indices);
 		}
 
-		public static void SetQuad(GraphicsDevice g, BasicEffect basicEffect)
+		public static void SetQuad(GraphicsDevice g, Effect effect)
 		{
 			TexturedQuad.g = g;
-			TexturedQuad.basicEffect = basicEffect;
+			TexturedQuad.effect = effect;
 		}
 
 		public void Draw()
@@ -59,7 +59,7 @@ namespace _3DBalls
 			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
 			g.RasterizerState = rasterizerState;
 
-			foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
+			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();	
 				
