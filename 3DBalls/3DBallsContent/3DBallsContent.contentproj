@@ -57,8 +57,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="Effects\Effect1.fx">
-      <Name>Effect1</Name>
+    <Compile Include="Effects\Specular.fx">
+      <Name>Specular</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>

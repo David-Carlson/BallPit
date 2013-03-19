@@ -55,12 +55,18 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    // TODO: add your pixel shader code here.
+    float3 light = normalize(DiffuseLightDirection);
+    float3 normal = normalize(input.Normal);
+    float3 r = normalize(2 * dot(light, normal) * normal - light);
+    float3 v = normalize(mul(normalize(ViewVector), World));
 
-    return float4(1, 0, 0, 1);
+    float dotProduct = dot(r, v);
+    float4 specular = SpecularIntensity * SpecularColor * max(pow(dotProduct, Shininess), 0) * length(input.Color);
+
+    return saturate(input.Color + AmbientColor * AmbientIntensity + specular);    
 }
 
-technique Technique1
+technique Specular
 {
     pass Pass1
     {
