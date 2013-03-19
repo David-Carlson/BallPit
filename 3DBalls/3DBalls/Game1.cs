@@ -19,6 +19,13 @@ namespace _3DBalls
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
+		TexturedQuad texQuad;
+
+		Matrix world = Matrix.CreateTranslation(0, 0, 0);
+		Matrix view = Matrix.CreateLookAt(new Vector3(10, 10, 10), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+		Matrix projection = Matrix.CreatePerspectiveFieldOfView(
+			MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
+
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -46,6 +53,7 @@ namespace _3DBalls
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
+			
 
 			// TODO: use this.Content to load your game content here
 		}

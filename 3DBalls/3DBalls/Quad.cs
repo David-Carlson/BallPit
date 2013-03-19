@@ -16,16 +16,17 @@ namespace ShapeTest
 
 
 		public Quad(
+			Color color,
 			Vector3 topLeft, Vector3 topRight, 
 			Vector3 bottomRight, Vector3 bottomLeft)
 		{
 
 			VertexPositionColor[] vertices = new VertexPositionColor[4];
 
-			vertices[0] = new VertexPositionColor(topLeft, Color.Green);
-			vertices[1] = new VertexPositionColor(topRight, Color.Black);
-			vertices[2] = new VertexPositionColor(bottomRight, Color.Orange);
-			vertices[3] = new VertexPositionColor(bottomLeft, Color.Yellow);
+			vertices[0] = new VertexPositionColor(topLeft, color);
+			vertices[1] = new VertexPositionColor(topRight, color);
+			vertices[2] = new VertexPositionColor(bottomRight, color);
+			vertices[3] = new VertexPositionColor(bottomLeft, color);
 
 			vertexBuffer = new VertexBuffer(g, typeof(VertexPositionColor), 4, BufferUsage.WriteOnly); 
 			vertexBuffer.SetData<VertexPositionColor>(vertices);
