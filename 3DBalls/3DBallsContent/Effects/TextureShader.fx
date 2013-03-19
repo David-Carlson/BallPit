@@ -17,7 +17,8 @@ float SpecularIntensity = 1;
 float3 ViewVector = float3(1, 0, 0);
 
 texture ModelTexture;
-sampler2D textureSampler = sampler_state {
+sampler2D textureSampler = sampler_state 
+{
     Texture = (ModelTexture);
 	//Linear Opposed to none, point, anisotropic
     MagFilter = Linear;

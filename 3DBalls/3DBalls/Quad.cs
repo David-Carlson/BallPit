@@ -46,7 +46,7 @@ namespace ShapeTest
 		public static void SetQuad(GraphicsDevice g, Effect effect)
 		{
 			Quad.g = g;
-			Quad.effect = effect;
+			Quad.effect = effect;			
 		}
 
 		public void Draw()
