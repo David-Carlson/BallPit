@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using ShapeTest;
 
 namespace _3DBalls
 {
@@ -20,6 +21,8 @@ namespace _3DBalls
 		SpriteBatch spriteBatch;
 
 		TexturedQuad texQuad;
+		Quad quad1, quad2;
+		BasicEffect basicEffect;
 
 		Matrix world = Matrix.CreateTranslation(0, 0, 0);
 		Matrix view = Matrix.CreateLookAt(new Vector3(10, 10, 10), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
@@ -53,6 +56,21 @@ namespace _3DBalls
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
+			basicEffect = new BasicEffect(graphics.GraphicsDevice);
+			basicEffect.EnableDefaultLighting();
+			basicEffect.World = world;
+			basicEffect.View = view;
+			basicEffect.Projection = projection;
+			basicEffect.VertexColorEnabled = true;
+			basicEffect.LightingEnabled = false;
+			basicEffect.TextureEnabled = false;
+			Quad.SetQuad(graphics.GraphicsDevice, basicEffect);
+			quad1 = new Quad(Color.Yellow,
+				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
+				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
+			quad2 = new Quad(Color.Silver,
+				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
+				new Vector3(0, 5, 0), new Vector3(0, -5, 0));
 			
 
 			// TODO: use this.Content to load your game content here
@@ -90,6 +108,8 @@ namespace _3DBalls
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
+			quad1.Draw();
+			quad2.Draw();
 
 			// TODO: Add your drawing code here
 
