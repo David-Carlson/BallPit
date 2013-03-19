@@ -20,7 +20,7 @@ namespace _3DBalls
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
-		TexturedQuad texQuad;
+		TexturedQuad texQuad1, texQuad2;
 		Quad quad1, quad2;
 		BasicEffect basicEffect;
 
@@ -61,14 +61,25 @@ namespace _3DBalls
 			basicEffect.World = world;
 			basicEffect.View = view;
 			basicEffect.Projection = projection;
-			basicEffect.VertexColorEnabled = true;
+			basicEffect.VertexColorEnabled = false; //Was true
 			basicEffect.LightingEnabled = false;
-			basicEffect.TextureEnabled = false;
+			basicEffect.TextureEnabled = true; // was false
+
 			Quad.SetQuad(graphics.GraphicsDevice, basicEffect);
-			quad1 = new Quad(Color.Yellow,
+			TexturedQuad.SetQuad(graphics.GraphicsDevice, basicEffect);
+			Texture2D texture = Content.Load<Texture2D>("BeachBallTexture");
+
+			/*quad1 = new Quad(Color.Yellow,
 				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
 				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
 			quad2 = new Quad(Color.Silver,
+				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
+				new Vector3(0, 5, 0), new Vector3(0, -5, 0));	*/		
+
+			texQuad1 = new TexturedQuad(texture,
+				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
+				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
+			texQuad2 = new TexturedQuad(texture,
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
 				new Vector3(0, 5, 0), new Vector3(0, -5, 0));
 			
@@ -108,8 +119,11 @@ namespace _3DBalls
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
-			quad1.Draw();
-			quad2.Draw();
+			/*quad1.Draw();
+			quad2.Draw();//*/
+
+			texQuad1.Draw();
+			texQuad2.Draw();
 
 			// TODO: Add your drawing code here
 

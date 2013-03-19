@@ -61,7 +61,8 @@ namespace _3DBalls
 
 			foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
 			{
-				pass.Apply();				
+				pass.Apply();	
+				
 				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);				
 			}
 		}
