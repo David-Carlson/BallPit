@@ -23,13 +23,12 @@ namespace _3DBalls
 		TexturedQuad texQuad1, texQuad2;
 		Quad quad1, quad2;
 		Effect effect;
-		BasicEffect s;
 		Model beachBall;
+		Texture2D abyssTexture, ballTexture;
 
-		Matrix world = Matrix.CreateTranslation(0, 0, 0);
-		Matrix view = Matrix.CreateLookAt(new Vector3(10, 10, 10), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
-		Matrix projection = Matrix.CreatePerspectiveFieldOfView(
-			MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
+		Matrix world;
+		Matrix view;
+		Matrix projection;
 		Vector3 viewVector;
 
 		public Game1()
@@ -57,13 +56,39 @@ namespace _3DBalls
 		/// </summary>
 		protected override void LoadContent()
 		{
+			world = Matrix.CreateTranslation(0, 0, 0);
+			view = Matrix.CreateLookAt(new Vector3(10, 10, 10), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+			projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
+			Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
+			viewVector = -new Vector3(10, 10, 10);
+			viewVector = Vector3.Normalize(viewVector);
+
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-			Texture2D ballTexture = Content.Load<Texture2D>(@"Models/BeachBallTexture");
-			Texture2D abyssTexture = Content.Load<Texture2D>(@"Textures/Abyss");
-			effect = Content.Load<Effect>(@"Effects/TextureShader");
-			effect.Parameters["ModelTexture"].SetValue(ballTexture);
+			ballTexture = Content.Load<Texture2D>(@"Models/BeachBallTexture");
+			abyssTexture = Content.Load<Texture2D>(@"Textures/Abyss");
+			effect = Content.Load<Effect>(@"Effects/TextureShader");			
 
+			Effect otherEffect = Content.Load<Effect>(@"Effects/TextureShader");
+			otherEffect.Parameters["World"].SetValue(world);
+			otherEffect.Parameters["View"].SetValue(view);
+			otherEffect.Parameters["Projection"].SetValue(projection);
+			otherEffect.Parameters["ViewVector"].SetValue(viewVector);
+			otherEffect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);				
+
+			Quad.SetQuad(graphics.GraphicsDevice, otherEffect);
+			TexturedQuad.SetQuad(graphics.GraphicsDevice);
+			
+			beachBall = Content.Load<Model>(@"Models/BeachBall");
+
+			#region NotNeeded
+			/*quad1 = new Quad(Color.Yellow,
+				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
+				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
+			quad2 = new Quad(Color.Silver,
+				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
+				new Vector3(0, 5, 0), new Vector3(0, -5, 0));*/
+			#endregion
 			BasicEffect basicEffect = new BasicEffect(graphics.GraphicsDevice);
 			basicEffect.EnableDefaultLighting();
 			basicEffect.World = world;
@@ -72,39 +97,14 @@ namespace _3DBalls
 			basicEffect.VertexColorEnabled = false;
 			basicEffect.LightingEnabled = true;
 			basicEffect.Texture = abyssTexture;
-			basicEffect.TextureEnabled = true;
-
-			Effect otherEffect = Content.Load<Effect>(@"Effects/TextureShader");
-			otherEffect.Parameters["World"].SetValue(world);
-			otherEffect.Parameters["View"].SetValue(view);
-			otherEffect.Parameters["Projection"].SetValue(projection);
-			otherEffect.Parameters["ViewVector"].SetValue(viewVector);
-			otherEffect.Parameters["ModelTexture"].SetValue(abyssTexture);
-
-			Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
-			otherEffect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
-			
-
-			Quad.SetQuad(graphics.GraphicsDevice, otherEffect);
-			TexturedQuad.SetQuad(graphics.GraphicsDevice, basicEffect);
-
-			
-			beachBall = Content.Load<Model>(@"Models/BeachBall");
-
-			viewVector = -new Vector3(1, 1, 1);
-
-			/*quad1 = new Quad(Color.Yellow,
-				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
-				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
-			quad2 = new Quad(Color.Silver,
-				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
-				new Vector3(0, 5, 0), new Vector3(0, -5, 0));*/		
+			basicEffect.TextureEnabled = true;//*/
 
 			texQuad1 = new TexturedQuad(
-				ballTexture,
+				ballTexture, basicEffect,
 				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
 				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
-			texQuad2 = new TexturedQuad(abyssTexture,
+			texQuad2 = new TexturedQuad(
+				abyssTexture, basicEffect,
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
 				new Vector3(0, 5, 0), new Vector3(0, -5, 0));
 			
@@ -146,7 +146,7 @@ namespace _3DBalls
 			quad2.Draw();//*/
 
 			texQuad1.Draw();
-			//texQuad2.Draw();
+			texQuad2.Draw();
 			DrawModelWithEffect(beachBall, world, view, projection);
 
 			// TODO: Add your drawing code here
@@ -164,6 +164,7 @@ namespace _3DBalls
 					effect.Parameters["View"].SetValue(view);
 					effect.Parameters["Projection"].SetValue(projection);
 					effect.Parameters["ViewVector"].SetValue(viewVector);
+					effect.Parameters["ModelTexture"].SetValue(ballTexture);
 
 					Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(mesh.ParentBone.Transform * world));
 					effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);

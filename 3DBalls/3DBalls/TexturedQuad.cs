@@ -12,16 +12,19 @@ namespace _3DBalls
 		public VertexBuffer vertexBuffer;
 		private IndexBuffer indexBuffer;
 		private Texture2D texture;
-		public static Effect effect;
+		public Effect effect;
 		private static GraphicsDevice g;
 
 
 		public TexturedQuad(
-			Texture2D texture,
+			Texture2D texture, Effect effect,
 			Vector3 topLeft, Vector3 topRight, 
 			Vector3 bottomRight, Vector3 bottomLeft)
 		{
 			this.texture = texture;
+			this.effect = effect;
+			//this.effect.Parameters["ModelTexture"].SetValue(texture);
+
 			VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[4];
 			
 			Vector3 normal = Vector3.Cross((bottomLeft - topLeft), (topRight - topLeft));
@@ -46,11 +49,12 @@ namespace _3DBalls
 			indexBuffer.SetData(indices);
 		}
 
-		public static void SetQuad(GraphicsDevice g, Effect effect)
+		//TODO Remove static g and place inside draw method
+		public static void SetQuad(GraphicsDevice g)
 		{
-			TexturedQuad.g = g;
-			TexturedQuad.effect = effect;		
+			TexturedQuad.g = g;	
 		}
+
 
 		public void Draw()
 		{
@@ -60,12 +64,11 @@ namespace _3DBalls
 			RasterizerState rasterizerState = new RasterizerState();
 			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
 			g.RasterizerState = rasterizerState;
-
+			//effect.Parameters["ModelTexture"].SetValue(texture);
 
 			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
 			{
-				pass.Apply();			
-				
+				pass.Apply();							
 				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);				
 			}
 		}
