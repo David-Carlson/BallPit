@@ -12,8 +12,8 @@ namespace _3DBalls
 		#region Static Members
 		public static GraphicsDevice g;
 		public static SpriteBatch spriteBatch;
-		public static Matrix view, projection;
-		public static Vector3 viewVector;
+		public static Matrix View, Projection;
+		public static Vector3 ViewVector;
 		#endregion
 
 		#region Initializer
@@ -31,9 +31,9 @@ namespace _3DBalls
 		{
 			DrawHelper.g = g;
 			DrawHelper.spriteBatch = spriteBatch;
-			DrawHelper.view = view;
-			DrawHelper.projection = projection;
-			DrawHelper.viewVector = viewVector;
+			DrawHelper.View = view;
+			DrawHelper.Projection = projection;
+			DrawHelper.ViewVector = viewVector;
 		}
 		#endregion
 
@@ -51,13 +51,13 @@ namespace _3DBalls
 
 			foreach (EffectPass pass in quad.effect.CurrentTechnique.Passes)
 			{
-				effect.Parameters["World"].SetValue(Matrix.Identity);
-				effect.Parameters["View"].SetValue(view);
-				effect.Parameters["Projection"].SetValue(projection);
-				effect.Parameters["ViewVector"].SetValue(viewVector);
+				effect.Parameters["World"].SetValue(Matrix.CreateTranslation(quad.Position));
+				effect.Parameters["View"].SetValue(View);
+				effect.Parameters["Projection"].SetValue(Projection);
+				effect.Parameters["ViewVector"].SetValue(ViewVector);
 				effect.Parameters["ModelTexture"].SetValue(quad.Texture);
 
-				Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(Matrix.Identity));
+				Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(Matrix.CreateTranslation(quad.Position)));
 				effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
 				pass.Apply();
 				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);
@@ -84,9 +84,9 @@ namespace _3DBalls
 				{
 					part.Effect = effect;
 					effect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
-					effect.Parameters["View"].SetValue(view);
-					effect.Parameters["Projection"].SetValue(projection);
-					effect.Parameters["ViewVector"].SetValue(viewVector);
+					effect.Parameters["View"].SetValue(View);
+					effect.Parameters["Projection"].SetValue(Projection);
+					effect.Parameters["ViewVector"].SetValue(ViewVector);
 					effect.Parameters["ModelTexture"].SetValue(texture);
 
 					Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(mesh.ParentBone.Transform * world));

@@ -64,17 +64,17 @@ namespace _3DBalls
 
 		public void Draw()
 		{
-
 			g.SetVertexBuffer(VertexBuffer);
 			g.Indices = IndexBuffer;
 
 			RasterizerState rasterizerState = new RasterizerState();
 			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
 			g.RasterizerState = rasterizerState;
-			//effect.Parameters["ModelTexture"].SetValue(texture);
+			
 
 			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
 			{
+				
 				pass.Apply();							
 				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);				
 			}

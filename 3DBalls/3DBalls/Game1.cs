@@ -72,11 +72,11 @@ namespace _3DBalls
 			effect = Content.Load<Effect>(@"Effects/TextureShader");			
 
 			Effect otherEffect = Content.Load<Effect>(@"Effects/TextureShader");
-			otherEffect.Parameters["World"].SetValue(world);
+			otherEffect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
 			otherEffect.Parameters["View"].SetValue(view);
 			otherEffect.Parameters["Projection"].SetValue(projection);
 			otherEffect.Parameters["ViewVector"].SetValue(viewVector);
-			otherEffect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);	
+			otherEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Invert(Matrix.Transpose(Matrix.CreateTranslation(Vector3.Zero))));	
 
 			Quad.SetQuad(graphics.GraphicsDevice, otherEffect);
 			TexturedQuad.SetQuad(graphics.GraphicsDevice);
