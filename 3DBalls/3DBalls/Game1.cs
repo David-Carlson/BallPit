@@ -74,7 +74,7 @@ namespace _3DBalls
 			otherEffect.Parameters["View"].SetValue(view);
 			otherEffect.Parameters["Projection"].SetValue(projection);
 			otherEffect.Parameters["ViewVector"].SetValue(viewVector);
-			otherEffect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);				
+			otherEffect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);	
 
 			Quad.SetQuad(graphics.GraphicsDevice, otherEffect);
 			TexturedQuad.SetQuad(graphics.GraphicsDevice);
@@ -98,9 +98,10 @@ namespace _3DBalls
 			basicEffect.LightingEnabled = true;
 			basicEffect.Texture = abyssTexture;
 			basicEffect.TextureEnabled = true;//*/
+			
 
 			texQuad1 = new TexturedQuad(
-				ballTexture, basicEffect,
+				ballTexture, otherEffect,
 				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
 				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
 			texQuad2 = new TexturedQuad(
