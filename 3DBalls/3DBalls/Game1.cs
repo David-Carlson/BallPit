@@ -83,10 +83,10 @@ namespace _3DBalls
 			basicEffect.World = world;
 			basicEffect.View = view;
 			basicEffect.Projection = projection;
-			basicEffect.VertexColorEnabled = false;
-			basicEffect.LightingEnabled = true;
-			basicEffect.Texture = abyssTexture;
-			basicEffect.TextureEnabled = true;//*/
+			basicEffect.VertexColorEnabled = true;
+			basicEffect.LightingEnabled = false;
+			//basicEffect.Texture = abyssTexture;
+			basicEffect.TextureEnabled = false;;//*/
 
 			Quad.SetQuad(graphics.GraphicsDevice, basicEffect);
 			TexturedQuad.SetQuad(graphics.GraphicsDevice);
@@ -94,16 +94,13 @@ namespace _3DBalls
 			beachBall = Content.Load<Model>(@"Models/BeachBall");
 
 			#region NotNeeded
-			quad1 = new Quad(Color.Yellow,
+			quad1 = new Quad(Color.Green,
 				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
 				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
 			/*quad2 = new Quad(Color.Silver,
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
 				new Vector3(0, 5, 0), new Vector3(0, -5, 0));*/
-			#endregion
-
-			
-			
+			#endregion			
 
 			texQuad1 = new TexturedQuad(
 				ballTexture, otherEffect,
@@ -150,10 +147,10 @@ namespace _3DBalls
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 			
 			quad1.Draw();
-			quad2.Draw();//*/
+			//quad2.Draw();//*/
 
-			texQuad1.Draw();
-			texQuad2.Draw();
+			//texQuad1.Draw();
+			//texQuad2.Draw();
 			DrawModelWithEffect(beachBall, world, view, projection);
 
 			// TODO: Add your drawing code here
