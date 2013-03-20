@@ -63,6 +63,8 @@ namespace _3DBalls
 			viewVector = -new Vector3(10, 10, 10);
 			viewVector = Vector3.Normalize(viewVector);
 
+			DrawHelper.Initialize(graphics.GraphicsDevice, spriteBatch, view, projection, viewVector);
+
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			ballTexture = Content.Load<Texture2D>(@"Models/BeachBallTexture");

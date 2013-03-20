@@ -7,13 +7,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _3DBalls
 {
-	class TexturedQuad
+	public class TexturedQuad
 	{
-		public VertexBuffer vertexBuffer;
-		private IndexBuffer indexBuffer;
-		private Texture2D texture;
+		#region Declarations
+		public VertexBuffer VertexBuffer;
+		public IndexBuffer IndexBuffer;
+		public Texture2D Texture;
+
+		public Vector3 Position;
+
 		public Effect effect;
 		private static GraphicsDevice g;
+
+		#endregion
 
 
 		public TexturedQuad(
@@ -21,7 +27,7 @@ namespace _3DBalls
 			Vector3 topLeft, Vector3 topRight, 
 			Vector3 bottomRight, Vector3 bottomLeft)
 		{
-			this.texture = texture;
+			this.Texture = texture;
 			this.effect = effect;
 			//this.effect.Parameters["ModelTexture"].SetValue(texture);
 
@@ -34,8 +40,8 @@ namespace _3DBalls
 			vertices[2] = new VertexPositionNormalTexture(bottomRight, normal, new Vector2(1, 1));
 			vertices[3] = new VertexPositionNormalTexture(bottomLeft, normal, new Vector2(0, 1));
 
-			vertexBuffer = new VertexBuffer(g, typeof(VertexPositionNormalTexture), 4, BufferUsage.WriteOnly);
-			vertexBuffer.SetData<VertexPositionNormalTexture>(vertices);
+			VertexBuffer = new VertexBuffer(g, typeof(VertexPositionNormalTexture), 4, BufferUsage.WriteOnly);
+			VertexBuffer.SetData<VertexPositionNormalTexture>(vertices);
 
 			short[] indices = new short[6];
 			indices[0] = 0; // TL
@@ -44,9 +50,9 @@ namespace _3DBalls
 			indices[3] = 0; // TL
 			indices[4] = 2; // BR
 			indices[5] = 3; // BL
-			indexBuffer = new IndexBuffer(
+			IndexBuffer = new IndexBuffer(
 				g, typeof(short), indices.Length, BufferUsage.WriteOnly);
-			indexBuffer.SetData(indices);
+			IndexBuffer.SetData(indices);
 		}
 
 		//TODO Remove static g and place inside draw method
@@ -58,8 +64,9 @@ namespace _3DBalls
 
 		public void Draw()
 		{
-			g.SetVertexBuffer(vertexBuffer);
-			g.Indices = indexBuffer;
+
+			g.SetVertexBuffer(VertexBuffer);
+			g.Indices = IndexBuffer;
 
 			RasterizerState rasterizerState = new RasterizerState();
 			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
