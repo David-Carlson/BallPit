@@ -51,11 +51,11 @@ namespace ShapeTest
 
 		public void Draw()
 		{
-			g.SetVertexBuffer(vertexBuffer);
-			g.Indices = indexBuffer;
-
 			RasterizerState rasterizerState = new RasterizerState();
 			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+
+			g.SetVertexBuffer(vertexBuffer);
+			g.Indices = indexBuffer;			
 			g.RasterizerState = rasterizerState;
 
 			foreach (EffectPass pass in effect.CurrentTechnique.Passes)

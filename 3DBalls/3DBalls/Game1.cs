@@ -76,21 +76,8 @@ namespace _3DBalls
 			otherEffect.Parameters["View"].SetValue(view);
 			otherEffect.Parameters["Projection"].SetValue(projection);
 			otherEffect.Parameters["ViewVector"].SetValue(viewVector);
-			otherEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Invert(Matrix.Transpose(Matrix.CreateTranslation(Vector3.Zero))));	
+			otherEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Invert(Matrix.Transpose(Matrix.CreateTranslation(Vector3.Zero))));
 
-			Quad.SetQuad(graphics.GraphicsDevice, otherEffect);
-			TexturedQuad.SetQuad(graphics.GraphicsDevice);
-			
-			beachBall = Content.Load<Model>(@"Models/BeachBall");
-
-			#region NotNeeded
-			/*quad1 = new Quad(Color.Yellow,
-				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
-				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
-			quad2 = new Quad(Color.Silver,
-				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
-				new Vector3(0, 5, 0), new Vector3(0, -5, 0));*/
-			#endregion
 			BasicEffect basicEffect = new BasicEffect(graphics.GraphicsDevice);
 			basicEffect.EnableDefaultLighting();
 			basicEffect.World = world;
@@ -100,6 +87,22 @@ namespace _3DBalls
 			basicEffect.LightingEnabled = true;
 			basicEffect.Texture = abyssTexture;
 			basicEffect.TextureEnabled = true;//*/
+
+			Quad.SetQuad(graphics.GraphicsDevice, basicEffect);
+			TexturedQuad.SetQuad(graphics.GraphicsDevice);
+			
+			beachBall = Content.Load<Model>(@"Models/BeachBall");
+
+			#region NotNeeded
+			quad1 = new Quad(Color.Yellow,
+				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
+				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
+			/*quad2 = new Quad(Color.Silver,
+				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
+				new Vector3(0, 5, 0), new Vector3(0, -5, 0));*/
+			#endregion
+
+			
 			
 
 			texQuad1 = new TexturedQuad(
@@ -145,7 +148,8 @@ namespace _3DBalls
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
-			/*quad1.Draw();
+			
+			quad1.Draw();
 			quad2.Draw();//*/
 
 			texQuad1.Draw();
