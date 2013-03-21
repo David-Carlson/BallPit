@@ -7,40 +7,44 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _3DBalls
 {
-	class ObjectManager
+	public class ObjectManager
 	{
 		#region Declarations
 		private BoundingBox playingArea;
 		public List<Sphere> spheres = new List<Sphere>();
-		public List<TexturedQuad> walls = new List<TexturedQuad>();
+		public List<TexturedRect> walls = new List<TexturedRect>();
 
 		private Sphere spherePlaceHolder;
 		private float sphere_initialSpeed = 10f;
 		/// <summary>
-		/// A sphere drawn but not updated/colliding
-		/// Used to show where next added Sphere will be
+		/// A list of spheres not be interacted with but drawn
+		/// Will later be added
 		/// </summary>
-		private Sphere nextSphereToAdd;	
+		private List<Sphere> nextSpheresToAdd = new List<Sphere>();
 
 		private Random rand = new Random();
 		#endregion
 
-		public ObjectManager()
+		public ObjectManager(BoundingBox playingArea, List<TexturedRect> walls, Sphere sphere, float sphereSpeed)
 		{
 			//TODO: Fill in collisionManager
+			this.playingArea = playingArea;
+			this.walls = walls;
+			this.spherePlaceHolder = sphere.Clone();
 		}
 
 		#region Sphere Management
 
 		/// <summary>
-		/// Adds the next sphere to the spheres in play list
+		/// Adds the next spheres to the spheres in play list
 		/// </summary>
 		public void AddNextSphere()
 		{
-			if (nextSphereToAdd != null)
+			if (nextSpheresToAdd.Count > 0)
 			{
-				spheres.Add(nextSphereToAdd);
-				nextSphereToAdd = null;
+				foreach (Sphere sphere in nextSpheresToAdd)
+					spheres.Add(sphere);
+				nextSpheresToAdd = new List<Sphere>();
 			}
 		}
 
@@ -60,6 +64,11 @@ namespace _3DBalls
 				if (sphere.BoundingShape.Intersects(temp))
 					return;
 			}
+			foreach (Sphere sphere in nextSpheresToAdd)
+			{
+				if (sphere.BoundingShape.Intersects(temp))
+					return;
+			}
 
 			Sphere newSphere = spherePlaceHolder.Clone();
 			newSphere.BoundingShape = temp;
@@ -71,7 +80,7 @@ namespace _3DBalls
 			newVelocity = Vector3.Normalize(newVelocity) * sphere_initialSpeed;
 			newSphere.Velocity = newVelocity;
 
-			nextSphereToAdd = newSphere;
+			nextSpheresToAdd.Add(newSphere);
 		}
 
 		/// <summary>
@@ -104,6 +113,11 @@ namespace _3DBalls
 						continue;
 					}
 				}
+				foreach (Sphere sphere in nextSpheresToAdd)
+				{
+					if (sphere.BoundingShape.Intersects(tempBounds))
+						return;
+				}
 				//It works! Now fill it up with a random velocity and such
 				Sphere newSphere = spherePlaceHolder.Clone();
 				newSphere.BoundingShape = tempBounds;
@@ -132,16 +146,19 @@ namespace _3DBalls
 				sphere.Update(gameTime);
 		}
 
+		/// <summary>
+		/// Draws all active spheres, potential spheres
+		/// and texturedRectangles
+		/// </summary>
 		public void Draw()
 		{
 			//TODO: Code for background/skybox
 
 			foreach (Sphere sphere in spheres)
 				sphere.Draw();
-			if (nextSphereToAdd != null)
-				nextSphereToAdd.Draw();
-
-			foreach (TexturedQuad wall in walls)
+			foreach (Sphere sphere in nextSpheresToAdd)
+				sphere.Draw();
+			foreach (TexturedRect wall in walls)
 				wall.Draw();
 		}
 

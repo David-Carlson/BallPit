@@ -23,8 +23,6 @@ namespace ShapeTest
 			Vector3 topLeft, Vector3 topRight, 
 			Vector3 bottomRight, Vector3 bottomLeft)
 		{
-			
-
 			VertexPositionColor[] vertices = new VertexPositionColor[4];
 
 			vertices[0] = new VertexPositionColor(topLeft, color);

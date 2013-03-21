@@ -23,13 +23,12 @@ namespace _3DBalls
 
 		#region Constructor
 		public TexturedQuad(
-			Texture2D texture, Effect effect,
+			Texture2D texture, Effect effect, 
 			Vector3 topLeft, Vector3 topRight, 
 			Vector3 bottomRight, Vector3 bottomLeft)
 		{
 			this.Texture = texture;
 			this.effect = effect;
-			//this.effect.Parameters["ModelTexture"].SetValue(texture);
 
 			VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[4];
 			
@@ -54,6 +53,11 @@ namespace _3DBalls
 				g, typeof(short), indices.Length, BufferUsage.WriteOnly);
 			IndexBuffer.SetData(indices);
 		}
+
+		private TexturedQuad()
+		{
+		}
+
 		#endregion
 
 		#region Public Methods

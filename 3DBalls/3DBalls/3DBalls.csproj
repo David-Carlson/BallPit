@@ -113,6 +113,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Quad.cs" />
+    <Compile Include="TexturedRect.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="SphereManager.cs" />
     <Compile Include="TexturedQuad.cs" />

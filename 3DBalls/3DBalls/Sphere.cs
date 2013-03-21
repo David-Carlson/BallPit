@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _3DBalls
 {
-	class Sphere : ICloneable
+	public class Sphere : ICloneable
 	{
 		#region Declarations
 		private Model model;
@@ -16,8 +16,11 @@ namespace _3DBalls
 
 		public Vector3 Position
 		{
-			public get;
-			public set
+			get
+			{
+				return Position;
+			}
+			set
 			{
 				Position = value;
 				BoundingShape.Center = value;

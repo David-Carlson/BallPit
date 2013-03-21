@@ -104,7 +104,7 @@ namespace _3DBalls
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
 				new Vector3(0, 5, 0), new Vector3(0, -5, 0));*/
 			#endregion			
-
+			
 			texQuad1 = new TexturedQuad(
 				ballTexture, otherEffect,
 				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
