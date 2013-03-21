@@ -9,20 +9,20 @@ namespace _3DBalls
 {
 	public class TexturedRect : TexturedQuad
 	{
-		private BoundingBox boundingShape;
-		private Vector3 normal;
+		public BoundingBox BoundingShape;
+		public Vector3 Normal;
 
 		private TexturedRect(
 			Texture2D texture, Effect effect,
 			Vector3 topLeft, Vector3 topRight,
 			Vector3 bottomRight, Vector3 bottomLeft) : base(texture, effect, topLeft, topRight, bottomRight, bottomLeft)
 		{
-			normal = Vector3.Cross(bottomLeft - topLeft, topRight - topLeft);
-			normal.Normalize();
+			Normal = Vector3.Cross(bottomLeft - topLeft, topRight - topLeft);
+			Normal.Normalize();
 
 			//I extruded the corners out in the opposite direction of the normal so I have all 8 corners saved in memory
 			Vector3 tL, tR, bR, bL;
-			tL = topLeft - normal;tR = topRight - normal; bR = bottomRight - normal; bL = bottomLeft - normal;
+			tL = topLeft - Normal;tR = topRight - Normal; bR = bottomRight - Normal; bL = bottomLeft - Normal;
 
 			// Only bottom corners could logically be min points, so I only check those. 
 			// Wait, fuck. If the normal faces upward this isn't true. Better check em all, you inelegant fuck
@@ -36,7 +36,7 @@ namespace _3DBalls
 					Vector3.Max(bottomLeft, bottomRight), Vector3.Max(bL, bR)),
 				Vector3.Max(
 					Vector3.Max(topLeft, topRight), Vector3.Max(tL, tR)));
-			boundingShape = new BoundingBox(min, max);
+			BoundingShape = new BoundingBox(min, max);
 		}
 	}
 }

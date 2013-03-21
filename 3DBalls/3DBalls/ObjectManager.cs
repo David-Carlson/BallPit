@@ -25,6 +25,8 @@ namespace _3DBalls
 		private Random rand = new Random();
 		#endregion
 
+		#region Constructor
+
 		public ObjectManager(BoundingBox playingArea, List<TexturedRect> walls, Sphere sphere, float sphereSpeed)
 		{
 			//TODO: Fill in collisionManager
@@ -32,6 +34,8 @@ namespace _3DBalls
 			this.walls = walls;
 			this.spherePlaceHolder = sphere.Clone();
 		}
+
+		#endregion
 
 		#region Sphere Management
 
@@ -110,7 +114,7 @@ namespace _3DBalls
 					if (sphere.BoundingShape.Intersects(tempBounds))
 					{
 						attempts++;
-						continue;
+						continue; //TODO: CHECK IF THIS IS POSSIBLE
 					}
 				}
 				foreach (Sphere sphere in nextSpheresToAdd)
@@ -133,6 +137,33 @@ namespace _3DBalls
 
 				attempts = 0;
 				count--;
+			}
+		}
+
+		#endregion
+		//TODO: Add ball-ball collision
+		#region Collision Handling
+
+		/// <summary>
+		/// Checks for active balls hitting walls
+		/// Doesn't reflect if the ball isn't travelling towards the wall (aka I fucked up in the previous frame)
+		/// </summary>
+		private void CheckSphereToWallCollisions()
+		{
+			foreach (Sphere sphere in spheres)
+			{
+				foreach (TexturedRect wall in walls)
+				{
+					if (sphere.BoundingShape.Intersects(wall.BoundingShape))
+					{
+						// V' = V -2N(N * V)
+						// Basic reflection of vector over normal
+						float reflection = Vector3.Dot(wall.Normal, sphere.Velocity);
+						if (reflection >= 0)
+							continue;
+						sphere.Velocity = sphere.Velocity - 2 * wall.Normal * (reflection);
+					}
+				}
 			}
 		}
 
