@@ -94,16 +94,18 @@ namespace _3DBalls
 			basicEffect.LightingEnabled = false;
 			//basicEffect.Texture = abyssTexture;
 			basicEffect.TextureEnabled = false;;//*/
-
 			#endregion
 
+			Sphere modelSphere = new Sphere(beachBall, ballTexture, Vector3.Zero, 1.9f, effect);
 
-			ObjectManager objManager = new ObjectManager(
+			ObjectManager objManager = new ObjectManager(new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)), getWallList(abyssTexture, otherEffect), modelSphere, 20f);
 
 			Quad.SetQuad(graphics.GraphicsDevice, basicEffect);
 			TexturedQuad.SetQuad(graphics.GraphicsDevice);
 			
 			beachBall = Content.Load<Model>(@"Models/BeachBall");
+			
+			
 
 			#region NotNeeded
 			quad1 = new Quad(Color.Green,
@@ -124,11 +126,22 @@ namespace _3DBalls
 				new Vector3(0, 5, 0), new Vector3(0, -5, 0));
 			
 		}
-		private List<TexturedRect> getWallList()
+		private List<TexturedRect> getWallList(Texture2D texture, Effect effect)
 		{
 			List<TexturedRect> walls = new List<TexturedRect>();
-			TexturedRect temp = new TexturedRect(
+			
+			TexturedRect temp = new TexturedRect(texture, effect,
+				new Vector3(0, 0, 20), new Vector3(0, -20, 20),
+				new Vector3(0, -20, 0), new Vector3(0, 0, 0));
 
+			/*			  
+			 * Texture2D texture, 1
+			 * Effect effect, 2
+			 * Vector3 topLeft, 3
+			 * Vector3 topRight, 4
+			 * Vector3 bottomRight, 5
+			 * Vector3 bottomLeft*/ // 6
+			walls.Add(temp);
 
 			return walls;
 		}
