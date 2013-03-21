@@ -141,7 +141,7 @@ namespace _3DBalls
 		}
 
 		#endregion
-		//TODO: Add ball-ball collision
+		
 		#region Collision Handling
 
 		/// <summary>
@@ -165,6 +165,50 @@ namespace _3DBalls
 					}
 				}
 			}
+		}
+
+		private bool AreColliding(Sphere one, Sphere two)
+		{
+			return one.BoundingShape.Intersects(two.BoundingShape);				
+		}
+
+		private void CheckSphereToSphereCollisions()
+		{
+			for (int i = 0; i < spheres.Count; i++)
+			{
+				for (int j = i + 1; j < spheres.Count; j++)
+				{
+					if (AreColliding(spheres[i], spheres[j]))
+						CollideSpheres(spheres[i], spheres[j]);
+				}				
+			}
+		}
+
+		/// <summary>
+		/// Calculates the new velocities of variable mass using a naive method
+		/// </summary>
+		/// <param name="one"></param>
+		/// <param name="two"></param>
+		private void CollideSpheres(Sphere one, Sphere two)
+		{
+			//TODO FILL
+			Vector3 velOfCenterOfMass = Vector3.Zero;
+
+			velOfCenterOfMass = (one.Velocity + two.Velocity) /
+				(one.mass + two.mass);
+
+			Vector3 sphereOneNormal = two.Position - one.Position;
+			sphereOneNormal.Normalize();
+			Vector3 sphereTwoNormal = one.Position - two.Position;
+			sphereTwoNormal.Normalize();
+
+			one.Velocity -= velOfCenterOfMass;
+			one.Velocity = Vector3.Reflect(one.Velocity, sphereTwoNormal);
+			one.Velocity += velOfCenterOfMass;
+
+			two.Velocity -= velOfCenterOfMass;
+			two.Velocity = Vector3.Reflect(two.Velocity, sphereOneNormal);
+			two.Velocity += velOfCenterOfMass;
 		}
 
 		#endregion

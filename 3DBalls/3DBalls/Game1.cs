@@ -60,7 +60,7 @@ namespace _3DBalls
 		protected override void LoadContent()
 		{
 			world = Matrix.CreateTranslation(0, 0, 0);
-			view = Matrix.CreateLookAt(new Vector3(10, 10, 10), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+			view = Matrix.CreateLookAt(new Vector3(0, 10, 1.9f), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
 			projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
 			Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
 			viewVector = -new Vector3(10, 10, 10);
@@ -72,7 +72,11 @@ namespace _3DBalls
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			ballTexture = Content.Load<Texture2D>(@"Models/BeachBallTexture");
 			abyssTexture = Content.Load<Texture2D>(@"Textures/Abyss");
-			effect = Content.Load<Effect>(@"Effects/TextureShader");			
+			effect = Content.Load<Effect>(@"Effects/TextureShader");
+
+			#region initializing
+
+
 
 			Effect otherEffect = Content.Load<Effect>(@"Effects/TextureShader");
 			otherEffect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
@@ -91,6 +95,11 @@ namespace _3DBalls
 			//basicEffect.Texture = abyssTexture;
 			basicEffect.TextureEnabled = false;;//*/
 
+			#endregion
+
+
+			ObjectManager objManager = new ObjectManager(
+
 			Quad.SetQuad(graphics.GraphicsDevice, basicEffect);
 			TexturedQuad.SetQuad(graphics.GraphicsDevice);
 			
@@ -98,7 +107,7 @@ namespace _3DBalls
 
 			#region NotNeeded
 			quad1 = new Quad(Color.Green,
-				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
+				new Vector3(5, 0, 1.9f), new Vector3(-5, 0, 1.9f),
 				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
 			/*quad2 = new Quad(Color.Silver,
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
@@ -114,6 +123,14 @@ namespace _3DBalls
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
 				new Vector3(0, 5, 0), new Vector3(0, -5, 0));
 			
+		}
+		private List<TexturedRect> getWallList()
+		{
+			List<TexturedRect> walls = new List<TexturedRect>();
+			TexturedRect temp = new TexturedRect(
+
+
+			return walls;
 		}
 
 		/// <summary>

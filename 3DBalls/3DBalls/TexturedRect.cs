@@ -9,9 +9,12 @@ namespace _3DBalls
 {
 	public class TexturedRect : TexturedQuad
 	{
+		#region Declaration Amendment
 		public BoundingBox BoundingShape;
 		public Vector3 Normal;
+		#endregion
 
+		#region Facade Constructor
 		private TexturedRect(
 			Texture2D texture, Effect effect,
 			Vector3 topLeft, Vector3 topRight,
@@ -38,5 +41,6 @@ namespace _3DBalls
 					Vector3.Max(topLeft, topRight), Vector3.Max(tL, tR)));
 			BoundingShape = new BoundingBox(min, max);
 		}
+		#endregion
 	}
 }

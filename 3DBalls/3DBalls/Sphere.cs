@@ -29,6 +29,7 @@ namespace _3DBalls
 		public Vector3 Velocity;
 		public static Vector3 Acceleration = new Vector3(0, 0, -.5f);
 		public BoundingSphere BoundingShape;
+		public float mass = 1f;
 		#endregion
 
 		#region Constructors
