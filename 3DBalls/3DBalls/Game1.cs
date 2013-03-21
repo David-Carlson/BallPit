@@ -20,6 +20,8 @@ namespace _3DBalls
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
+		#region Declarations
+
 		TexturedQuad texQuad1, texQuad2;
 		Quad quad1, quad2;
 		Effect effect;
@@ -30,6 +32,7 @@ namespace _3DBalls
 		Matrix view;
 		Matrix projection;
 		Vector3 viewVector;
+		#endregion
 
 		public Game1()
 		{
@@ -157,6 +160,7 @@ namespace _3DBalls
 
 			base.Draw(gameTime);
 		}
+
 		private void DrawModelWithEffect(Model model, Matrix world, Matrix view, Matrix projection)
 		{
 			foreach (ModelMesh mesh in model.Meshes)
@@ -176,5 +180,6 @@ namespace _3DBalls
 				mesh.Draw();
 			}
 		}
+
 	}
 }

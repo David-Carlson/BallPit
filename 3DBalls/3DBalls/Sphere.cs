@@ -20,12 +20,12 @@ namespace _3DBalls
 			public set
 			{
 				Position = value;
-				boundingShape.Center = value;
+				BoundingShape.Center = value;
 			}
 		}
-		private Vector3 velocity;
+		public Vector3 Velocity;
 		public static Vector3 Acceleration = new Vector3(0, 0, -.5f);
-		public BoundingSphere boundingShape;
+		public BoundingSphere BoundingShape;
 		#endregion
 
 		#region Constructors
@@ -37,7 +37,7 @@ namespace _3DBalls
 			this.texture = texture;
 
 			this.Position = position;
-			this.boundingShape = new BoundingSphere(position, radius);
+			this.BoundingShape = new BoundingSphere(position, radius);
 			this.effect = effect;
 		}
 
@@ -46,8 +46,8 @@ namespace _3DBalls
 		#region Public Methods
 		public void Update(GameTime gameTime)
 		{
-			Position += velocity;
-			velocity += Acceleration;		
+			Position += Velocity;
+			Velocity += Acceleration;		
 		}
 
 		public void Draw()
@@ -68,8 +68,8 @@ namespace _3DBalls
 			this.texture = otherSphere.texture;
 			this.effect = otherSphere.effect.Clone();
 			this.Position = otherSphere.Position;
-			this.velocity = otherSphere.velocity;
-			this.boundingShape = otherSphere.boundingShape;
+			this.Velocity = otherSphere.Velocity;
+			this.BoundingShape = otherSphere.BoundingShape;
 		}
 
 		object ICloneable.Clone()
