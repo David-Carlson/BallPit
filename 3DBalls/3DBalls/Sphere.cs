@@ -46,8 +46,9 @@ namespace _3DBalls
 		#region Public Methods
 		public void Update(GameTime gameTime)
 		{
-			Position += Velocity;
-			Velocity += Acceleration;		
+			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			Position += Velocity * elapsed;
+			Velocity += Acceleration * elapsed;		
 		}
 
 		public void Draw()

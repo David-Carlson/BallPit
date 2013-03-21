@@ -21,7 +21,7 @@ namespace _3DBalls
 
 		#endregion
 
-
+		#region Constructor
 		public TexturedQuad(
 			Texture2D texture, Effect effect,
 			Vector3 topLeft, Vector3 topRight, 
@@ -54,8 +54,9 @@ namespace _3DBalls
 				g, typeof(short), indices.Length, BufferUsage.WriteOnly);
 			IndexBuffer.SetData(indices);
 		}
+		#endregion
 
-		//TODO Remove static g and place inside draw method
+		#region Public Methods
 		public static void SetQuad(GraphicsDevice g)
 		{
 			TexturedQuad.g = g;	
@@ -79,5 +80,6 @@ namespace _3DBalls
 				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);				
 			}
 		}
+		#endregion
 	}
 }

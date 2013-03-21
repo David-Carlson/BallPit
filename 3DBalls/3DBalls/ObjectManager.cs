@@ -7,23 +7,41 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _3DBalls
 {
-	class CollisionManager
+	class ObjectManager
 	{
 		#region Declarations
 		private BoundingBox playingArea;
-		private Sphere spherePlaceHolder;
-		private float sphere_initialSpeed = 10f;
 		public List<Sphere> spheres = new List<Sphere>();
 		public List<TexturedQuad> walls = new List<TexturedQuad>();
 
-		private Random rand = new Random();
+		private Sphere spherePlaceHolder;
+		private float sphere_initialSpeed = 10f;
+		/// <summary>
+		/// A sphere drawn but not updated/colliding
+		/// Used to show where next added Sphere will be
+		/// </summary>
+		private Sphere nextSphereToAdd;	
 
+		private Random rand = new Random();
 		#endregion
 
-		public CollisionManager()
+		public ObjectManager()
 		{
 			//TODO: Fill in collisionManager
+		}
 
+		#region Sphere Management
+
+		/// <summary>
+		/// Adds the next sphere to the spheres in play list
+		/// </summary>
+		public void AddNextSphere()
+		{
+			if (nextSphereToAdd != null)
+			{
+				spheres.Add(nextSphereToAdd);
+				nextSphereToAdd = null;
+			}
 		}
 
 		/// <summary>
@@ -51,9 +69,16 @@ namespace _3DBalls
 			float zSpeed = rand.Next(-1, 1);
 			Vector3 newVelocity = new Vector3(xSpeed, ySpeed, zSpeed);
 			newVelocity = Vector3.Normalize(newVelocity) * sphere_initialSpeed;
-			newSphere.Velocity = newVelocity;			
+			newSphere.Velocity = newVelocity;
+
+			nextSphereToAdd = newSphere;
 		}
 
+		/// <summary>
+		/// Adds count worth of spheres to the playingArea, each with a random position and velocity.
+		/// If no position is found within 50 attempts, it returns
+		/// </summary>
+		/// <param name="count">Number of spheres to add</param>
 		public void AddRandomSpheres(int count)
 		{
 			int attempts = 0;
@@ -90,9 +115,36 @@ namespace _3DBalls
 				newVelocity = Vector3.Normalize(newVelocity) * sphere_initialSpeed;
 				newSphere.Velocity = newVelocity;
 
+				spheres.Add(newSphere);
+
 				attempts = 0;
 				count--;
 			}
 		}
+
+		#endregion
+
+		#region Update and Draw
+
+		public void Update(GameTime gameTime)
+		{
+			foreach (Sphere sphere in spheres)
+				sphere.Update(gameTime);
+		}
+
+		public void Draw()
+		{
+			//TODO: Code for background/skybox
+
+			foreach (Sphere sphere in spheres)
+				sphere.Draw();
+			if (nextSphereToAdd != null)
+				nextSphereToAdd.Draw();
+
+			foreach (TexturedQuad wall in walls)
+				wall.Draw();
+		}
+
+		#endregion
 	}
 }
