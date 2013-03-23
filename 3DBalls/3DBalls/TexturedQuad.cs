@@ -54,10 +54,6 @@ namespace _3DBalls
 			IndexBuffer.SetData(indices);
 		}
 
-		private TexturedQuad()
-		{
-		}
-
 		#endregion
 
 		#region Public Methods

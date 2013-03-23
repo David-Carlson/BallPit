@@ -13,18 +13,12 @@ namespace _3DBalls
 		private Model model;
 		private Texture2D texture;
 		private Effect effect;
+		private Vector3 position;
 
 		public Vector3 Position
 		{
-			get
-			{
-				return Position;
-			}
-			set
-			{
-				Position = value;
-				BoundingShape.Center = value;
-			}
+			get{ return this.position; }
+			set{ this.position = value; BoundingShape.Center = value; }
 		}
 		public Vector3 Velocity;
 		public static Vector3 Acceleration = new Vector3(0, 0, -.5f);

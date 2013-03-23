@@ -12,10 +12,15 @@ namespace _3DBalls
 		#region Declaration Amendment
 		public BoundingBox BoundingShape;
 		public Vector3 Normal;
+		private Texture2D texture;
+		private Vector3 vector31;
+		private Vector3 vector32;
+		private Vector3 vector33;
+		private Vector3 vector34;
 		#endregion
 
 		#region Facade Constructor
-		private TexturedRect(
+		public TexturedRect(
 			Texture2D texture, Effect effect,
 			Vector3 topLeft, Vector3 topRight,
 			Vector3 bottomRight, Vector3 bottomLeft) : base(texture, effect, topLeft, topRight, bottomRight, bottomLeft)
@@ -41,6 +46,8 @@ namespace _3DBalls
 					Vector3.Max(topLeft, topRight), Vector3.Max(tL, tR)));
 			BoundingShape = new BoundingBox(min, max);
 		}
+
+		
 		#endregion
 	}
 }

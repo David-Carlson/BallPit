@@ -27,6 +27,7 @@ namespace _3DBalls
 		Effect effect;
 		Model beachBall;
 		Texture2D abyssTexture, ballTexture;
+		ObjectManager ObjManager;
 
 		Matrix world;
 		Matrix view;
@@ -60,7 +61,7 @@ namespace _3DBalls
 		protected override void LoadContent()
 		{
 			world = Matrix.CreateTranslation(0, 0, 0);
-			view = Matrix.CreateLookAt(new Vector3(0, 10, 1.9f), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+			view = Matrix.CreateLookAt(new Vector3(10, 10, 10), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
 			projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
 			Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
 			viewVector = -new Vector3(10, 10, 10);
@@ -75,9 +76,6 @@ namespace _3DBalls
 			effect = Content.Load<Effect>(@"Effects/TextureShader");
 
 			#region initializing
-
-
-
 			Effect otherEffect = Content.Load<Effect>(@"Effects/TextureShader");
 			otherEffect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
 			otherEffect.Parameters["View"].SetValue(view);
@@ -96,16 +94,18 @@ namespace _3DBalls
 			basicEffect.TextureEnabled = false;;//*/
 			#endregion
 
-			Sphere modelSphere = new Sphere(beachBall, ballTexture, Vector3.Zero, 1.9f, effect);
-
-			ObjectManager objManager = new ObjectManager(new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)), getWallList(abyssTexture, otherEffect), modelSphere, 20f);
-
 			Quad.SetQuad(graphics.GraphicsDevice, basicEffect);
 			TexturedQuad.SetQuad(graphics.GraphicsDevice);
+
+			Sphere modelSphere = new Sphere(beachBall, ballTexture, Vector3.Zero, 1.9f, effect);
+
+			ObjManager = new ObjectManager(
+				new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)), 
+				getWallList(abyssTexture, effect, new Rectangle(0, 0, 20, 20), 20),
+				modelSphere, 
+				10f);			
 			
-			beachBall = Content.Load<Model>(@"Models/BeachBall");
-			
-			
+			beachBall = Content.Load<Model>(@"Models/BeachBall");			
 
 			#region NotNeeded
 			quad1 = new Quad(Color.Green,
@@ -123,25 +123,46 @@ namespace _3DBalls
 			texQuad2 = new TexturedQuad(
 				abyssTexture, basicEffect,
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
-				new Vector3(0, 5, 0), new Vector3(0, -5, 0));
-			
+				new Vector3(0, 5, 0), new Vector3(0, -5, 0));			
 		}
-		private List<TexturedRect> getWallList(Texture2D texture, Effect effect)
+
+		/// <summary>
+		/// Returns a list of TexturedRects such that it forms in inward facing parallelepiped og 
+		/// given (POSITIVE) dimensions, and a height
+		/// </summary>
+		/// <param name="texture"></param>
+		/// <param name="effect"></param>
+		/// <param name="dimensions"></param>
+		/// <param name="height"></param>
+		/// <returns></returns>
+		private List<TexturedRect> getWallList(Texture2D texture, Effect effect, Rectangle dimensions, float height)
 		{
 			List<TexturedRect> walls = new List<TexturedRect>();
 			
-			TexturedRect temp = new TexturedRect(texture, effect,
-				new Vector3(0, 0, 20), new Vector3(0, -20, 20),
-				new Vector3(0, -20, 0), new Vector3(0, 0, 0));
-
-			/*			  
-			 * Texture2D texture, 1
-			 * Effect effect, 2
-			 * Vector3 topLeft, 3
-			 * Vector3 topRight, 4
-			 * Vector3 bottomRight, 5
-			 * Vector3 bottomLeft*/ // 6
-			walls.Add(temp);
+			// Faces -X direction
+			walls.Add(new TexturedRect(texture, effect,
+				new Vector3(0, 0, height), new Vector3(0, -dimensions.Y, height),
+				new Vector3(0, -dimensions.Y, 0), new Vector3(0, 0, 0)));
+			// Faces +Y direction
+			walls.Add(new TexturedRect(texture, effect,
+				new Vector3(0, -dimensions.Y, height), new Vector3(-dimensions.X, -dimensions.Y, height),
+				new Vector3(-dimensions.X, -dimensions.Y, 0), new Vector3(0, -dimensions.Y, 0)));
+			// Faces X Direction
+			walls.Add(new TexturedRect(texture, effect,
+				new Vector3(-dimensions.X, -dimensions.Y, height), new Vector3(-dimensions.X, 0, height),
+				new Vector3(-dimensions.X, 0, 0), new Vector3(-dimensions.X, -dimensions.Y, 0)));
+			// Faces -Y Direction
+			walls.Add(new TexturedRect(texture, effect,
+				new Vector3(-dimensions.X, 0, height), new Vector3(0, 0, height),
+				new Vector3(0, 0, 0), new Vector3(-dimensions.X, 0, 0)));
+			// Faces +Z Direction (Floor)
+			walls.Add(new TexturedRect(texture, effect,
+				new Vector3(0, 0, 0), new Vector3(0, -dimensions.Y, 0),
+				new Vector3(-dimensions.X, -dimensions.Y, 0), new Vector3(-dimensions.X, 0, 0)));
+			// Faces -Z Direction (Ceiling)
+			walls.Add(new TexturedRect(texture, effect,
+				new Vector3(0, -dimensions.Y, height), new Vector3(-dimensions.X, -dimensions.Y, height),
+				new Vector3(-dimensions.X, 0, height), new Vector3(0, 0, height)));		
 
 			return walls;
 		}
@@ -179,12 +200,14 @@ namespace _3DBalls
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 			
-			quad1.Draw();
+			//quad1.Draw();
 			//quad2.Draw();//*/
+			if (ObjManager != null)
+				ObjManager.Draw();
 
 			//texQuad1.Draw();
 			//texQuad2.Draw();
-			DrawModelWithEffect(beachBall, world, view, projection);
+			//DrawModelWithEffect(beachBall, world, view, projection);
 
 			// TODO: Add your drawing code here
 
