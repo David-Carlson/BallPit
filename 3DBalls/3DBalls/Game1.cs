@@ -23,7 +23,8 @@ namespace _3DBalls
 		#region Declarations
 
 		TexturedQuad texQuad1, texQuad2;
-		Quad quad1, quad2;
+		TexturedRect texRect1;
+		ColoredQuad quad1, quad2;
 		Effect effect;
 		Model beachBall;
 		Texture2D abyssTexture, ballTexture;
@@ -61,7 +62,7 @@ namespace _3DBalls
 		protected override void LoadContent()
 		{
 			world = Matrix.CreateTranslation(0, 0, 0);
-			view = Matrix.CreateLookAt(new Vector3(10, 10, 10), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+			view = Matrix.CreateLookAt(new Vector3(30, 30, 30), new Vector3(-10, -10, 0), new Vector3(0, 0, 1));
 			projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
 			Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
 			viewVector = -new Vector3(10, 10, 10);
@@ -88,27 +89,34 @@ namespace _3DBalls
 			basicEffect.World = world;
 			basicEffect.View = view;
 			basicEffect.Projection = projection;
-			basicEffect.VertexColorEnabled = true;
-			basicEffect.LightingEnabled = false;
-			//basicEffect.Texture = abyssTexture;
-			basicEffect.TextureEnabled = false;;//*/
+			basicEffect.VertexColorEnabled = false;
+			basicEffect.LightingEnabled = true;
+			basicEffect.Texture = abyssTexture;
+			basicEffect.TextureEnabled = true;//*/
 			#endregion
 
-			Quad.SetQuad(graphics.GraphicsDevice, basicEffect);
+			ColoredQuad.SetQuad(graphics.GraphicsDevice, basicEffect);
 			TexturedQuad.SetQuad(graphics.GraphicsDevice);
 
 			Sphere modelSphere = new Sphere(beachBall, ballTexture, Vector3.Zero, 1.9f, effect);
 
+			texRect1 = new TexturedRect(abyssTexture, basicEffect,
+				new Vector3(0, -20, 20), new Vector3(-20, -20, 20),
+				new Vector3(-20, -20, 0), new Vector3(0, -20, 0));
+			List<TexturedRect> walls = new List<TexturedRect>();
+			walls.Add(texRect1);
+
 			ObjManager = new ObjectManager(
 				new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)), 
-				getWallList(abyssTexture, effect, new Rectangle(0, 0, 20, 20), 20),
+				walls,
 				modelSphere, 
-				10f);			
+				10f);		
 			
-			beachBall = Content.Load<Model>(@"Models/BeachBall");			
+			beachBall = Content.Load<Model>(@"Models/BeachBall");		
+			//getWallList(abyssTexture, basicEffect, new Rectangle(0, 0, 20, 20), 20)
 
 			#region NotNeeded
-			quad1 = new Quad(Color.Green,
+			quad1 = new ColoredQuad(Color.Green,
 				new Vector3(5, 0, 1.9f), new Vector3(-5, 0, 1.9f),
 				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
 			/*quad2 = new Quad(Color.Silver,
@@ -116,10 +124,12 @@ namespace _3DBalls
 				new Vector3(0, 5, 0), new Vector3(0, -5, 0));*/
 			#endregion			
 			
-			texQuad1 = new TexturedQuad(
-				ballTexture, otherEffect,
+			
+				
+				/*new TexturedQuad(
+				ballTexture, basicEffect,
 				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
-				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
+				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));*/
 			texQuad2 = new TexturedQuad(
 				abyssTexture, basicEffect,
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
@@ -139,14 +149,17 @@ namespace _3DBalls
 		{
 			List<TexturedRect> walls = new List<TexturedRect>();
 			
+			/*
 			// Faces -X direction
 			walls.Add(new TexturedRect(texture, effect,
 				new Vector3(0, 0, height), new Vector3(0, -dimensions.Y, height),
-				new Vector3(0, -dimensions.Y, 0), new Vector3(0, 0, 0)));
+				new Vector3(0, -dimensions.Y, 0), new Vector3(0, 0, 0)));//*/
+
 			// Faces +Y direction
 			walls.Add(new TexturedRect(texture, effect,
 				new Vector3(0, -dimensions.Y, height), new Vector3(-dimensions.X, -dimensions.Y, height),
 				new Vector3(-dimensions.X, -dimensions.Y, 0), new Vector3(0, -dimensions.Y, 0)));
+			/*
 			// Faces X Direction
 			walls.Add(new TexturedRect(texture, effect,
 				new Vector3(-dimensions.X, -dimensions.Y, height), new Vector3(-dimensions.X, 0, height),
@@ -162,7 +175,7 @@ namespace _3DBalls
 			// Faces -Z Direction (Ceiling)
 			walls.Add(new TexturedRect(texture, effect,
 				new Vector3(0, -dimensions.Y, height), new Vector3(-dimensions.X, -dimensions.Y, height),
-				new Vector3(-dimensions.X, 0, height), new Vector3(0, 0, height)));		
+				new Vector3(-dimensions.X, 0, height), new Vector3(0, 0, height)));//*/
 
 			return walls;
 		}

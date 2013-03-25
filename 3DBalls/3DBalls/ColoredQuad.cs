@@ -8,7 +8,7 @@ using _3DBalls;
 
 namespace ShapeTest
 {
-	public class Quad
+	public class ColoredQuad : IQuad 
 	{
 		#region Declarations
 		public VertexBuffer vertexBuffer;
@@ -18,7 +18,7 @@ namespace ShapeTest
 		#endregion
 
 		#region Constructor
-		public Quad(
+		public ColoredQuad(
 			Color color,
 			Vector3 topLeft, Vector3 topRight, 
 			Vector3 bottomRight, Vector3 bottomLeft)
@@ -49,8 +49,8 @@ namespace ShapeTest
 
 		public static void SetQuad(GraphicsDevice g, Effect effect)
 		{
-			Quad.g = g;
-			Quad.effect = effect;			
+			ColoredQuad.g = g;
+			ColoredQuad.effect = effect;			
 		}
 
 		/// <summary>

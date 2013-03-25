@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _3DBalls
 {
-	public class TexturedQuad
+	public class TexturedQuad : IQuad 
 	{
 		#region Declarations
 		public VertexBuffer VertexBuffer;

@@ -228,7 +228,6 @@ namespace _3DBalls
 		public void Draw()
 		{
 			//TODO: Code for background/skybox
-
 			foreach (Sphere sphere in spheres)
 				sphere.Draw();
 			foreach (Sphere sphere in nextSpheresToAdd)

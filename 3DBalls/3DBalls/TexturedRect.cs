@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _3DBalls
 {
-	public class TexturedRect : TexturedQuad
+	public class TexturedRect : TexturedQuad, IQuad 
 	{
 		#region Declaration Amendment
 		public BoundingBox BoundingShape;
