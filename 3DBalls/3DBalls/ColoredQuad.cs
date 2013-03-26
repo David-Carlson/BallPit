@@ -29,7 +29,7 @@ namespace ShapeTest
 		#endregion
 
 		#region Constructors
-		public ColoredQuad(
+		private ColoredQuad(
 			Color color,
 			Vector3 topLeft, Vector3 topRight, 
 			Vector3 bottomRight, Vector3 bottomLeft)
@@ -60,6 +60,7 @@ namespace ShapeTest
 			Vector3 topLeft, Vector3 topRight,
 			Vector3 bottomRight, Vector3 bottomLeft) : this(color,topLeft, topRight, bottomRight, bottomLeft)
 		{
+			this.effect = effect;
 			Normal = Vector3.Cross(bottomLeft - topLeft, topRight - topLeft);
 			Normal.Normalize();
 

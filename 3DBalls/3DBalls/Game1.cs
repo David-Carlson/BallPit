@@ -61,6 +61,7 @@ namespace _3DBalls
 		/// </summary>
 		protected override void LoadContent()
 		{
+			#region Matrix Setup and Initializations
 			world = Matrix.CreateTranslation(0, 0, 0);
 			view = Matrix.CreateLookAt(new Vector3(30, 30, 30), new Vector3(-10, -10, 0), new Vector3(0, 0, 1));
 			projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
@@ -69,40 +70,57 @@ namespace _3DBalls
 			viewVector = Vector3.Normalize(viewVector);
 
 			DrawHelper.Initialize(graphics.GraphicsDevice, spriteBatch, view, projection, viewVector);
+			#endregion
 
-			// Create a new SpriteBatch, which can be used to draw textures.
+			#region Content Loading
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			ballTexture = Content.Load<Texture2D>(@"Models/BeachBallTexture");
 			abyssTexture = Content.Load<Texture2D>(@"Textures/Abyss");
 			effect = Content.Load<Effect>(@"Effects/TextureShader");
-
-			#region initializing
-			Effect otherEffect = Content.Load<Effect>(@"Effects/TextureShader");
-			otherEffect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
-			otherEffect.Parameters["View"].SetValue(view);
-			otherEffect.Parameters["Projection"].SetValue(projection);
-			otherEffect.Parameters["ViewVector"].SetValue(viewVector);
-			otherEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Invert(Matrix.Transpose(Matrix.CreateTranslation(Vector3.Zero))));
-
-			BasicEffect basicEffect = new BasicEffect(graphics.GraphicsDevice);
-			basicEffect.EnableDefaultLighting();
-			basicEffect.World = world;
-			basicEffect.View = view;
-			basicEffect.Projection = projection;
-			basicEffect.VertexColorEnabled = false;
-			basicEffect.LightingEnabled = true;
-			basicEffect.Texture = abyssTexture;
-			basicEffect.TextureEnabled = true;//*/
+			beachBall = Content.Load<Model>(@"Models/BeachBall");
 			#endregion
 
-			TexturedQuad.SetQuad(graphics.GraphicsDevice);
+			#region Effect setup
+			Effect texturedEffect = Content.Load<Effect>(@"Effects/TextureShader");
+			texturedEffect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
+			texturedEffect.Parameters["View"].SetValue(view);
+			texturedEffect.Parameters["Projection"].SetValue(projection);
+			texturedEffect.Parameters["ViewVector"].SetValue(viewVector);
+			texturedEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Invert(Matrix.Transpose(Matrix.CreateTranslation(Vector3.Zero))));
+
+			BasicEffect solidColorEffect = new BasicEffect(graphics.GraphicsDevice);
+			solidColorEffect.EnableDefaultLighting();
+			solidColorEffect.World = world;
+			solidColorEffect.View = view;
+			solidColorEffect.Projection = projection;
+			solidColorEffect.VertexColorEnabled = true;
+			solidColorEffect.LightingEnabled = false;
+			solidColorEffect.Texture = null;
+			solidColorEffect.TextureEnabled = false;
+
+			BasicEffect textureEffect = new BasicEffect(graphics.GraphicsDevice);
+			textureEffect.EnableDefaultLighting();
+			textureEffect.World = world;
+			textureEffect.View = view;
+			textureEffect.Projection = projection;
+			textureEffect.VertexColorEnabled = false;
+			textureEffect.LightingEnabled = true;
+			textureEffect.Texture = abyssTexture;
+			textureEffect.TextureEnabled = true;
+			#endregion
+
+			#region Object setup
 
 			Sphere modelSphere = new Sphere(beachBall, ballTexture, Vector3.Zero, 1.9f, effect);
-
-			texRect1 = new TexturedCollidableQuad(abyssTexture, basicEffect,
+			quad1 = new ColoredQuad(Color.Gray, solidColorEffect,
 				new Vector3(0, -20, 20), new Vector3(-20, -20, 20),
 				new Vector3(-20, -20, 0), new Vector3(0, -20, 0));
+			texRect1 = new TexturedCollidableQuad(abyssTexture, textureEffect,
+				new Vector3(-20, -20, 20), new Vector3(-20, 0, 20),
+				new Vector3(-20, 0, 0), new Vector3(-20, -20, 0));
+
 			List<IQuadCollidable> walls = new List<IQuadCollidable>();
+			walls.Add(quad1);
 			walls.Add(texRect1);
 			
 
@@ -110,30 +128,24 @@ namespace _3DBalls
 				new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)),
 				(List<IQuadCollidable>)walls,
 				modelSphere, 
-				10f);		
-			
-			beachBall = Content.Load<Model>(@"Models/BeachBall");		
-			//getWallList(abyssTexture, basicEffect, new Rectangle(0, 0, 20, 20), 20)
+				10f);
+
+			#endregion
 
 			#region NotNeeded
-			quad1 = new ColoredQuad(Color.Green,
+			/*quad1 = new ColoredQuad(Color.Green, basicEffect,
 				new Vector3(5, 0, 1.9f), new Vector3(-5, 0, 1.9f),
 				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));
-			/*quad2 = new Quad(Color.Silver,
+			quad2 = new Quad(Color.Silver,
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
-				new Vector3(0, 5, 0), new Vector3(0, -5, 0));*/
-			#endregion			
-			
-			
-				
-				/*new TexturedQuad(
-				ballTexture, basicEffect,
-				new Vector3(5, 0, 5), new Vector3(-5, 0, 5),
-				new Vector3(-5, 0, 0), new Vector3(5, 0, 0));*/
-			texQuad2 = new TexturedQuad(
+				new Vector3(0, 5, 0), new Vector3(0, -5, 0));
+			 texQuad2 = new TexturedQuad(
 				abyssTexture, basicEffect,
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
-				new Vector3(0, 5, 0), new Vector3(0, -5, 0));			
+				new Vector3(0, 5, 0), new Vector3(0, -5, 0));//*/
+			#endregion
+
+
 		}
 
 		/// <summary>

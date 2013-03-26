@@ -15,9 +15,7 @@ namespace _3DBalls
 		public Texture2D Texture;
 
 		public Vector3 Position;
-
 		public Effect effect;
-		private static GraphicsDevice g;
 
 		#endregion
 
@@ -39,7 +37,7 @@ namespace _3DBalls
 			vertices[2] = new VertexPositionNormalTexture(bottomRight, normal, new Vector2(1, 1));
 			vertices[3] = new VertexPositionNormalTexture(bottomLeft, normal, new Vector2(0, 1));
 
-			VertexBuffer = new VertexBuffer(g, typeof(VertexPositionNormalTexture), 4, BufferUsage.WriteOnly);
+			VertexBuffer = new VertexBuffer(DrawHelper.g, typeof(VertexPositionNormalTexture), 4, BufferUsage.WriteOnly);
 			VertexBuffer.SetData<VertexPositionNormalTexture>(vertices);
 
 			short[] indices = new short[6];
@@ -50,34 +48,29 @@ namespace _3DBalls
 			indices[4] = 2; // BR
 			indices[5] = 3; // BL
 			IndexBuffer = new IndexBuffer(
-				g, typeof(short), indices.Length, BufferUsage.WriteOnly);
+				DrawHelper.g, typeof(short), indices.Length, BufferUsage.WriteOnly);
 			IndexBuffer.SetData(indices);
 		}
 
 		#endregion
 
 		#region Public Methods
-		public static void SetQuad(GraphicsDevice g)
-		{
-			TexturedQuad.g = g;	
-		}
-
 
 		public void Draw()
 		{
-			g.SetVertexBuffer(VertexBuffer);
-			g.Indices = IndexBuffer;
+
+			DrawHelper.g.SetVertexBuffer(VertexBuffer);
+			DrawHelper.g.Indices = IndexBuffer;
 
 			RasterizerState rasterizerState = new RasterizerState();
 			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
-			g.RasterizerState = rasterizerState;
-			
+			DrawHelper.g.RasterizerState = rasterizerState;			
 
 			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
 			{
 				
-				pass.Apply();							
-				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);				
+				pass.Apply();
+				DrawHelper.g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);				
 			}
 		}
 		#endregion
