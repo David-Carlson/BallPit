@@ -63,13 +63,15 @@ namespace _3DBalls
 		{
 			#region Matrix Setup and Initializations
 			world = Matrix.CreateTranslation(0, 0, 0);
-			view = Matrix.CreateLookAt(new Vector3(-30, 20, 40), new Vector3(-10, -10, 10), new Vector3(0, 0, 1));
+			Vector3 cameraLoc = new Vector3(30, 30, 30);
+			Vector3 cameraTarget = new Vector3(-10, -10, 10);
+			view = Matrix.CreateLookAt(cameraLoc, cameraTarget, new Vector3(0, 0, 1));
 			projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
 			Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
 			viewVector = -new Vector3(10, 10, 10);
 			viewVector = Vector3.Normalize(viewVector);
 
-			DrawHelper.Initialize(graphics.GraphicsDevice, spriteBatch, view, projection, viewVector, new Random());
+			DrawHelper.Initialize(graphics.GraphicsDevice, spriteBatch, cameraLoc, cameraTarget, projection, viewVector, new Random());
 			#endregion
 
 			#region Content Loading
@@ -281,6 +283,8 @@ namespace _3DBalls
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
 				this.Exit();
 
+			CameraController.Update(gameTime);
+
 			// TODO: Add your update logic here
 
 			base.Update(gameTime);
@@ -302,7 +306,8 @@ namespace _3DBalls
 			base.Draw(gameTime);
 		}
 
-		private void DrawModelWithEffect(Model model, Matrix world, Matrix view, Matrix projection)
+		private void DrawModelWithEffect(
+			Model model, Matrix world, Matrix view, Matrix projection)
 		{
 			foreach (ModelMesh mesh in model.Meshes)
 			{

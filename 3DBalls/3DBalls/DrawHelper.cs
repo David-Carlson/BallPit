@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ShapeTest;
 
 namespace _3DBalls
 {
@@ -21,7 +22,8 @@ namespace _3DBalls
 			}
 			set
 			{
-				CameraLoc = value;
+				cameraLoc = value;
+				Console.WriteLine("Camera = " + cameraLoc);
 				View = Matrix.CreateLookAt(cameraLoc, cameraTarget, upVector);
 			}
 		}			
@@ -45,13 +47,13 @@ namespace _3DBalls
 			}
 			set
 			{
-				UpVector = value;
+				upVector = value;
 				View = Matrix.CreateLookAt(cameraLoc, cameraTarget, upVector);
 			}
 		}
 
 		private static Vector3 cameraLoc = new Vector3(30, 30, 30);
-		private static Vector3 cameraTarget = new Vector3(-10, -10, 0);
+		private static Vector3 cameraTarget = new Vector3(-10, -10, 10);
 		private static Vector3 upVector = new Vector3(0, 0, 1);
 
 		public static Matrix View, Projection;
@@ -74,6 +76,7 @@ namespace _3DBalls
 		{
 			DrawHelper.cameraLoc = cameraLoc;
 			DrawHelper.CameraTarget = cameraTarget; // Intentionally triggers property
+		
 
 			DrawHelper.g = g;
 			DrawHelper.spriteBatch = spriteBatch;
@@ -109,9 +112,32 @@ namespace _3DBalls
 				pass.Apply();
 				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);
 			}
+		}
+		public static void Draw(ColoredQuad quad)
+		{
+			//TODO: Move code to DrawHelper?
+			Effect effect = quad.effect;
+			RasterizerState rasterizerState = new RasterizerState();
+			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+
+			DrawHelper.g.SetVertexBuffer(quad.VertexBuffer);
+			DrawHelper.g.Indices = quad.IndexBuffer;
+			DrawHelper.g.RasterizerState = rasterizerState;
+
+			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+			{
+				quad.effect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
+				effect.Parameters["View"].SetValue(View);
+				effect.Parameters["Projection"].SetValue(Projection);
+				effect.Parameters["ViewVector"].SetValue(ViewVector);
+
+				//Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(Matrix.CreateTranslation(quad.Position)));
+				//effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);			
+				pass.Apply();
+				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);
+			}
 
 		}
-
 
 		/// <summary>
 		/// Draws the given model w/given matrix at given position (world matrix)

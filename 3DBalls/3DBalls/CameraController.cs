@@ -20,13 +20,13 @@ namespace _3DBalls
 			}
 			set
 			{
-				angle = value % ((float)Math.PI * 2);
+				angle = value % (MathHelper.TwoPi);
 			}
 		}
+
 		private static float angularAcceleration;
 
 		private static float maxVelocity = 0.4f;
-
 		private static float angularVelocity = 0f;
 		private static float AngularVelocity
 		{
@@ -36,7 +36,7 @@ namespace _3DBalls
 			}
 			set
 			{
-				AngularVelocity = MathHelper.Clamp(value, -maxVelocity, maxVelocity);
+				angularVelocity = MathHelper.Clamp(value, -maxVelocity, maxVelocity);
 			}
 		}
 
@@ -46,21 +46,24 @@ namespace _3DBalls
 		public static void Update(GameTime gameTime)
 		{			
 			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			
 			GamePadState padState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
-			angularAcceleration = padState.ThumbSticks.Right.X * 0.5f;
 
-			if (angularAcceleration == 0f)
-				AngularVelocity += -AngularVelocity / Math.Abs(AngularVelocity) * 0.5f;
-			else
-				AngularVelocity += angularAcceleration;		
+			// Get the X component, this will relatively rotate the camera around
+			angularAcceleration = padState.ThumbSticks.Right.X;
+			if (angularAcceleration != 0)
+				Console.WriteLine(angularAcceleration);//*/
 
-			angle += AngularVelocity * elapsed;
+			Angle += angularAcceleration * elapsed;
+			Console.WriteLine("Angle = " + Angle);
+
+			UpdateMatricies();
 		}
 		private static void UpdateMatricies()
 		{
 			DrawHelper.CameraLoc = new Vector3(
-				(float)Math.Cos(angle) * 30,
-				(float)Math.Sin(angle) * 30,
+				(float)Math.Cos(Angle) * 30,
+				(float)Math.Sin(Angle) * 30,
 				30);
 		}
 
