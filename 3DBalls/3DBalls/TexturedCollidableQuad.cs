@@ -7,20 +7,30 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _3DBalls
 {
-	public class TexturedRect : TexturedQuad, IQuad 
+	public class TexturedCollidableQuad : TexturedQuad, IQuadCollidable 
 	{
 		#region Declaration Amendment
-		public BoundingBox BoundingShape;
-		public Vector3 Normal;
+		public BoundingBox BoundingShape
+		{
+			get;
+			set;
+		}
+		public Vector3 Normal
+		{
+			get;
+			set;
+		}
 		private Texture2D texture;
+
+		/* The fuck were these for? Auto generated?
 		private Vector3 vector31;
 		private Vector3 vector32;
 		private Vector3 vector33;
-		private Vector3 vector34;
+		private Vector3 vector34;*/
 		#endregion
 
 		#region Facade Constructor
-		public TexturedRect(
+		public TexturedCollidableQuad(
 			Texture2D texture, Effect effect,
 			Vector3 topLeft, Vector3 topRight,
 			Vector3 bottomRight, Vector3 bottomLeft) : base(texture, effect, topLeft, topRight, bottomRight, bottomLeft)

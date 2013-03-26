@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _3DBalls
 {
-	public class TexturedQuad : IQuad 
+	public class TexturedQuad 
 	{
 		#region Declarations
 		public VertexBuffer VertexBuffer;
@@ -29,7 +29,7 @@ namespace _3DBalls
 		{
 			this.Texture = texture;
 			this.effect = effect;
-
+			
 			VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[4];
 			
 			Vector3 normal = Vector3.Cross((bottomLeft - topLeft), (topRight - topLeft));

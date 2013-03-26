@@ -107,14 +107,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IQuad.cs" />
+    <Compile Include="IQuadCollidable.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="DrawHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="ColoredQuad.cs" />
-    <Compile Include="TexturedRect.cs" />
+    <Compile Include="TexturedCollidableQuad.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="SphereManager.cs" />
     <Compile Include="TexturedQuad.cs" />

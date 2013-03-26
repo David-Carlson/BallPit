@@ -23,7 +23,7 @@ namespace _3DBalls
 		#region Declarations
 
 		TexturedQuad texQuad1, texQuad2;
-		TexturedRect texRect1;
+		TexturedCollidableQuad texRect1;
 		ColoredQuad quad1, quad2;
 		Effect effect;
 		Model beachBall;
@@ -95,20 +95,20 @@ namespace _3DBalls
 			basicEffect.TextureEnabled = true;//*/
 			#endregion
 
-			ColoredQuad.SetQuad(graphics.GraphicsDevice, basicEffect);
 			TexturedQuad.SetQuad(graphics.GraphicsDevice);
 
 			Sphere modelSphere = new Sphere(beachBall, ballTexture, Vector3.Zero, 1.9f, effect);
 
-			texRect1 = new TexturedRect(abyssTexture, basicEffect,
+			texRect1 = new TexturedCollidableQuad(abyssTexture, basicEffect,
 				new Vector3(0, -20, 20), new Vector3(-20, -20, 20),
 				new Vector3(-20, -20, 0), new Vector3(0, -20, 0));
-			List<TexturedRect> walls = new List<TexturedRect>();
+			List<IQuadCollidable> walls = new List<IQuadCollidable>();
 			walls.Add(texRect1);
+			
 
 			ObjManager = new ObjectManager(
-				new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)), 
-				walls,
+				new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)),
+				(List<IQuadCollidable>)walls,
 				modelSphere, 
 				10f);		
 			
@@ -145,9 +145,9 @@ namespace _3DBalls
 		/// <param name="dimensions"></param>
 		/// <param name="height"></param>
 		/// <returns></returns>
-		private List<TexturedRect> getWallList(Texture2D texture, Effect effect, Rectangle dimensions, float height)
+		private List<TexturedCollidableQuad> getWallList(Texture2D texture, Effect effect, Rectangle dimensions, float height)
 		{
-			List<TexturedRect> walls = new List<TexturedRect>();
+			List<TexturedCollidableQuad> walls = new List<TexturedCollidableQuad>();
 			
 			/*
 			// Faces -X direction
@@ -156,7 +156,7 @@ namespace _3DBalls
 				new Vector3(0, -dimensions.Y, 0), new Vector3(0, 0, 0)));//*/
 
 			// Faces +Y direction
-			walls.Add(new TexturedRect(texture, effect,
+			walls.Add(new TexturedCollidableQuad(texture, effect,
 				new Vector3(0, -dimensions.Y, height), new Vector3(-dimensions.X, -dimensions.Y, height),
 				new Vector3(-dimensions.X, -dimensions.Y, 0), new Vector3(0, -dimensions.Y, 0)));
 			/*

@@ -12,7 +12,7 @@ namespace _3DBalls
 		#region Declarations
 		private BoundingBox playingArea;
 		public List<Sphere> spheres = new List<Sphere>();
-		public List<TexturedRect> walls = new List<TexturedRect>();
+		public List<IQuadCollidable> walls = new List<IQuadCollidable>();
 
 		private Sphere spherePlaceHolder;
 		private float sphere_initialSpeed = 10f;
@@ -27,7 +27,7 @@ namespace _3DBalls
 
 		#region Constructor
 
-		public ObjectManager(BoundingBox playingArea, List<TexturedRect> walls, Sphere sphere, float sphereSpeed)
+		public ObjectManager(BoundingBox playingArea, List<IQuadCollidable> walls, Sphere sphere, float sphereSpeed)
 		{
 			//TODO: Fill in collisionManager
 			this.playingArea = playingArea;
@@ -152,7 +152,7 @@ namespace _3DBalls
 		{
 			foreach (Sphere sphere in spheres)
 			{
-				foreach (TexturedRect wall in walls)
+				foreach (IQuadCollidable wall in walls)
 				{
 					if (sphere.BoundingShape.Intersects(wall.BoundingShape))
 					{
@@ -232,7 +232,7 @@ namespace _3DBalls
 				sphere.Draw();
 			foreach (Sphere sphere in nextSpheresToAdd)
 				sphere.Draw();
-			foreach (TexturedRect wall in walls)
+			foreach (IQuadCollidable wall in walls)
 				wall.Draw();
 		}
 

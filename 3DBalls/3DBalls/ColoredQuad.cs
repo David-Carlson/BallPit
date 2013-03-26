@@ -8,16 +8,27 @@ using _3DBalls;
 
 namespace ShapeTest
 {
-	public class ColoredQuad : IQuad 
+	public class ColoredQuad : IQuadCollidable 
 	{
 		#region Declarations
 		public VertexBuffer vertexBuffer;
 		private IndexBuffer indexBuffer;
-		public static Effect effect; 
-		private static GraphicsDevice g; // TODO: Remove this
+		private Effect effect;
+
+		public BoundingBox BoundingShape
+		{
+			get;
+			set;
+		}
+		public Vector3 Normal
+		{
+			get;
+			set;
+		}
+		//private static GraphicsDevice g; // TODO: Remove this
 		#endregion
 
-		#region Constructor
+		#region Constructors
 		public ColoredQuad(
 			Color color,
 			Vector3 topLeft, Vector3 topRight, 
@@ -43,15 +54,37 @@ namespace ShapeTest
 			indexBuffer = new IndexBuffer(DrawHelper.g, typeof(short), indices.Length, BufferUsage.WriteOnly);
 			indexBuffer.SetData(indices);
 		}
+
+		public ColoredQuad(
+			Color color, Effect effect,
+			Vector3 topLeft, Vector3 topRight,
+			Vector3 bottomRight, Vector3 bottomLeft) : this(color,topLeft, topRight, bottomRight, bottomLeft)
+		{
+			Normal = Vector3.Cross(bottomLeft - topLeft, topRight - topLeft);
+			Normal.Normalize();
+
+			//I extruded the corners out in the opposite direction of the normal so I have all 8 corners saved in memory
+			Vector3 tL, tR, bR, bL;
+			tL = topLeft - Normal;tR = topRight - Normal; bR = bottomRight - Normal; bL = bottomLeft - Normal;
+
+			// Only bottom corners could logically be min points, so I only check those. 
+			// Wait, fuck. If the normal faces upward this isn't true. Better check em all, you inelegant fuck
+			Vector3 min = Vector3.Min(
+				Vector3.Min(
+					Vector3.Min(bottomLeft, bottomRight), Vector3.Min(bL, bR)), 
+				Vector3.Min(
+					Vector3.Min(topLeft, topRight), Vector3.Min(tL, tR)));
+			Vector3 max = Vector3.Max(
+				Vector3.Max(
+					Vector3.Max(bottomLeft, bottomRight), Vector3.Max(bL, bR)),
+				Vector3.Max(
+					Vector3.Max(topLeft, topRight), Vector3.Max(tL, tR)));
+			BoundingShape = new BoundingBox(min, max);
+		}
+
 		#endregion
 
 		#region Public Methods
-
-		public static void SetQuad(GraphicsDevice g, Effect effect)
-		{
-			ColoredQuad.g = g;
-			ColoredQuad.effect = effect;			
-		}
 
 		/// <summary>
 		/// Draws the quad
