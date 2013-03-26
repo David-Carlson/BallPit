@@ -12,6 +12,48 @@ namespace _3DBalls
 		#region Static Members
 		public static GraphicsDevice g;
 		public static SpriteBatch spriteBatch;
+
+		public static Vector3 CameraLoc
+		{
+			get
+			{
+				return cameraLoc;
+			}
+			set
+			{
+				CameraLoc = value;
+				View = Matrix.CreateLookAt(cameraLoc, cameraTarget, upVector);
+			}
+		}			
+		public static Vector3 CameraTarget
+		{
+			get
+			{
+				return cameraTarget;
+			}
+			set
+			{
+				cameraTarget = value;
+				View = Matrix.CreateLookAt(cameraLoc, cameraTarget, upVector);
+			}
+		}
+		public static Vector3 UpVector
+		{
+			get
+			{
+				return upVector;
+			}
+			set
+			{
+				UpVector = value;
+				View = Matrix.CreateLookAt(cameraLoc, cameraTarget, upVector);
+			}
+		}
+
+		private static Vector3 cameraLoc = new Vector3(30, 30, 30);
+		private static Vector3 cameraTarget = new Vector3(-10, -10, 0);
+		private static Vector3 upVector = new Vector3(0, 0, 1);
+
 		public static Matrix View, Projection;
 		public static Vector3 ViewVector;
 		public static Random rand;
@@ -28,11 +70,14 @@ namespace _3DBalls
 		/// <param name="viewVector"></param>
 		public static void Initialize(
 			GraphicsDevice g, SpriteBatch spriteBatch,
-			Matrix view, Matrix projection, Vector3 viewVector, Random rand)
+			Vector3 cameraLoc, Vector3 cameraTarget, Matrix projection, Vector3 viewVector, Random rand)
 		{
+			DrawHelper.cameraLoc = cameraLoc;
+			DrawHelper.CameraTarget = cameraTarget; // Intentionally triggers property
+
 			DrawHelper.g = g;
 			DrawHelper.spriteBatch = spriteBatch;
-			DrawHelper.View = view;
+			
 			DrawHelper.Projection = projection;
 			DrawHelper.ViewVector = viewVector;
 			DrawHelper.rand = rand;
