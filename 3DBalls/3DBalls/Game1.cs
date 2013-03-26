@@ -63,13 +63,13 @@ namespace _3DBalls
 		{
 			#region Matrix Setup and Initializations
 			world = Matrix.CreateTranslation(0, 0, 0);
-			view = Matrix.CreateLookAt(new Vector3(30, 30, 30), new Vector3(-10, -10, 0), new Vector3(0, 0, 1));
+			view = Matrix.CreateLookAt(new Vector3(-30, 20, 40), new Vector3(-10, -10, 10), new Vector3(0, 0, 1));
 			projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
 			Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
 			viewVector = -new Vector3(10, 10, 10);
 			viewVector = Vector3.Normalize(viewVector);
 
-			DrawHelper.Initialize(graphics.GraphicsDevice, spriteBatch, view, projection, viewVector);
+			DrawHelper.Initialize(graphics.GraphicsDevice, spriteBatch, view, projection, viewVector, new Random());
 			#endregion
 
 			#region Content Loading
@@ -118,16 +118,19 @@ namespace _3DBalls
 			texRect1 = new TexturedCollidableQuad(abyssTexture, textureEffect,
 				new Vector3(-20, -20, 20), new Vector3(-20, 0, 20),
 				new Vector3(-20, 0, 0), new Vector3(-20, -20, 0));
+			ColoredQuad quad2 = new ColoredQuad(Color.Gray*.5f, solidColorEffect,
+				new Vector3(0, 0, 20), new Vector3(0, -20, 20),
+				new Vector3(0, -20, 0), new Vector3(0, 0, 0));
 
 			List<IQuadCollidable> walls = new List<IQuadCollidable>();
 			walls.Add(quad1);
 			walls.Add(texRect1);
-			
+			walls.Add(quad2);
 
 			ObjManager = new ObjectManager(
 				new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)),
-				(List<IQuadCollidable>)walls,
-				modelSphere, 
+				getShadedColoredWallList(Color.Red, solidColorEffect, Vector3.Zero, new Vector3(-20, -20, 20)),
+				modelSphere,
 				10f);
 
 			#endregion
@@ -144,53 +147,119 @@ namespace _3DBalls
 				new Vector3(0, -5, 5), new Vector3(0, 5, 5),
 				new Vector3(0, 5, 0), new Vector3(0, -5, 0));//*/
 			#endregion
+		}
 
+		#region Wall Maker
+
+		/// <summary>
+		/// Creates a box of randomly shaded inward facing walls
+		/// </summary>
+		/// <param name="color"></param>
+		/// <param name="effect"></param>
+		/// <param name="pos"></param>
+		/// <param name="dim"></param>
+		/// <returns></returns>
+		private List<IQuadCollidable> getShadedColoredWallList(
+			Color color, Effect effect, 
+			Vector3 pos, Vector3 dim)
+		{
+			List<IQuadCollidable> walls = new List<IQuadCollidable>();			
+
+			//Faces -X direction
+			walls.Add(new ColoredQuad(
+				DrawHelper.GetShade(color, 0, 1), 
+				effect, 
+				new Vector3(0, 0, dim.Z) + pos, new Vector3(0, dim.Y, dim.Z) + pos, 
+				new Vector3(0, dim.Y, 0) + pos, new Vector3(0, 0, 0) + pos));
+
+			// Faces +Y direction
+			walls.Add(new ColoredQuad(
+				DrawHelper.GetShade(color, 0, 1), 
+				effect,
+				new Vector3(0, dim.Y, dim.Z) + pos, new Vector3(dim.X, dim.Y, dim.Z) + pos, 
+				new Vector3(dim.X, dim.Y, 0) + pos, new Vector3(0, dim.Y, 0) + pos));
+
+			// Faces X Direction
+			walls.Add(new ColoredQuad(
+				DrawHelper.GetShade(color, 0, 1), 
+				effect,
+				new Vector3(dim.X, dim.Y, dim.Z) + pos, new Vector3(dim.X, 0, dim.Z) + pos,
+				new Vector3(dim.X, 0, 0) + pos, new Vector3(dim.X, dim.Y, 0) + pos));
+
+			// Faces -Y Direction
+			walls.Add(new ColoredQuad(
+				DrawHelper.GetShade(color, 0, 1), 
+				effect,
+				new Vector3(dim.X, 0, dim.Z) + pos, new Vector3(0, 0, dim.Z) + pos, 
+				new Vector3(0, 0, 0) + pos, new Vector3(dim.X, 0, 0) + pos));
+
+			// Faces +Z Direction (Floor)
+			walls.Add(new ColoredQuad(
+				DrawHelper.GetShade(color, 0, 1), 
+				effect, 
+				new Vector3(0, 0, 0) + pos, new Vector3(0, dim.Y, 0) + pos, 
+				new Vector3(dim.X, dim.Y, 0) + pos, new Vector3(dim.X, 0, 0) + pos));
+
+			// Faces -Z Direction (Ceiling)
+			walls.Add(new ColoredQuad(
+				DrawHelper.GetShade(color, 0, 1), 
+				effect,
+				new Vector3(0, dim.Y, dim.Z) + pos, new Vector3(0, 0, dim.Z) + pos, 
+				new Vector3(dim.X, 0, dim.Z) + pos, new Vector3(dim.X, dim.Y, dim.Z) + pos));
+
+			return walls;
 
 		}
 
 		/// <summary>
-		/// Returns a list of TexturedRects such that it forms in inward facing parallelepiped og 
-		/// given (POSITIVE) dimensions, and a height
+		/// Returns a list of textured walls with one corner at position and the other at the point 'dimensions'
 		/// </summary>
 		/// <param name="texture"></param>
 		/// <param name="effect"></param>
 		/// <param name="dimensions"></param>
-		/// <param name="height"></param>
+		/// <param name="position"></param>
 		/// <returns></returns>
-		private List<TexturedCollidableQuad> getWallList(Texture2D texture, Effect effect, Rectangle dimensions, float height)
+		private List<IQuadCollidable> getTexturedWallList(
+			Texture2D texture, Effect effect, 
+			Vector3 pos, Vector3 dim)
 		{
-			List<TexturedCollidableQuad> walls = new List<TexturedCollidableQuad>();
-			
-			/*
-			// Faces -X direction
-			walls.Add(new TexturedRect(texture, effect,
-				new Vector3(0, 0, height), new Vector3(0, -dimensions.Y, height),
-				new Vector3(0, -dimensions.Y, 0), new Vector3(0, 0, 0)));//*/
+			List<IQuadCollidable> walls = new List<IQuadCollidable>();
+
+			//Faces -X direction
+			walls.Add(new TexturedCollidableQuad(texture, effect,
+				new Vector3(0, 0, dim.Z) + pos, new Vector3(0, dim.Y, dim.Z) + pos,
+				new Vector3(0, dim.Y, 0) + pos, new Vector3(0, 0, 0) + pos));
 
 			// Faces +Y direction
 			walls.Add(new TexturedCollidableQuad(texture, effect,
-				new Vector3(0, -dimensions.Y, height), new Vector3(-dimensions.X, -dimensions.Y, height),
-				new Vector3(-dimensions.X, -dimensions.Y, 0), new Vector3(0, -dimensions.Y, 0)));
-			/*
+				new Vector3(0, dim.Y, dim.Z) + pos, new Vector3(dim.X, dim.Y, dim.Z) + pos,
+				new Vector3(dim.X, dim.Y, 0) + pos, new Vector3(0, dim.Y, 0) + pos));
+
 			// Faces X Direction
-			walls.Add(new TexturedRect(texture, effect,
-				new Vector3(-dimensions.X, -dimensions.Y, height), new Vector3(-dimensions.X, 0, height),
-				new Vector3(-dimensions.X, 0, 0), new Vector3(-dimensions.X, -dimensions.Y, 0)));
+			walls.Add(new TexturedCollidableQuad(texture, effect,
+				new Vector3(dim.X, dim.Y, dim.Z) + pos, new Vector3(dim.X, 0, dim.Z) + pos,
+				new Vector3(dim.X, 0, 0) + pos, new Vector3(dim.X, dim.Y, 0) + pos));
+
 			// Faces -Y Direction
-			walls.Add(new TexturedRect(texture, effect,
-				new Vector3(-dimensions.X, 0, height), new Vector3(0, 0, height),
-				new Vector3(0, 0, 0), new Vector3(-dimensions.X, 0, 0)));
+			walls.Add(new TexturedCollidableQuad(texture, effect,
+				new Vector3(dim.X, 0, dim.Z) + pos, new Vector3(0, 0, dim.Z) + pos,
+				new Vector3(0, 0, 0) + pos, new Vector3(dim.X, 0, 0) + pos));
+
 			// Faces +Z Direction (Floor)
-			walls.Add(new TexturedRect(texture, effect,
-				new Vector3(0, 0, 0), new Vector3(0, -dimensions.Y, 0),
-				new Vector3(-dimensions.X, -dimensions.Y, 0), new Vector3(-dimensions.X, 0, 0)));
+			walls.Add(new TexturedCollidableQuad(texture, effect,
+				new Vector3(0, 0, 0) + pos, new Vector3(0, dim.Y, 0) + pos,
+				new Vector3(dim.X, dim.Y, 0) + pos, new Vector3(dim.X, 0, 0) + pos));
+
 			// Faces -Z Direction (Ceiling)
-			walls.Add(new TexturedRect(texture, effect,
-				new Vector3(0, -dimensions.Y, height), new Vector3(-dimensions.X, -dimensions.Y, height),
-				new Vector3(-dimensions.X, 0, height), new Vector3(0, 0, height)));//*/
+			walls.Add(new TexturedCollidableQuad(texture, effect,
+				new Vector3(0, dim.Y, dim.Z) + pos, new Vector3(0, 0, dim.Z) + pos,
+				new Vector3(dim.X, 0, dim.Z) + pos, new Vector3(dim.X, dim.Y, dim.Z) + pos));
 
 			return walls;
+
 		}
+
+		#endregion
 
 		/// <summary>
 		/// UnloadContent will be called once per game and is the place to unload
@@ -224,16 +293,10 @@ namespace _3DBalls
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
-			
-			//quad1.Draw();
-			//quad2.Draw();//*/
+		
 			if (ObjManager != null)
 				ObjManager.Draw();
-
-			//texQuad1.Draw();
-			//texQuad2.Draw();
-			//DrawModelWithEffect(beachBall, world, view, projection);
-
+		
 			// TODO: Add your drawing code here
 
 			base.Draw(gameTime);

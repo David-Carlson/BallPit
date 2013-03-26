@@ -14,6 +14,7 @@ namespace _3DBalls
 		public static SpriteBatch spriteBatch;
 		public static Matrix View, Projection;
 		public static Vector3 ViewVector;
+		public static Random rand;
 		#endregion
 
 		#region Initializer
@@ -27,13 +28,14 @@ namespace _3DBalls
 		/// <param name="viewVector"></param>
 		public static void Initialize(
 			GraphicsDevice g, SpriteBatch spriteBatch,
-			Matrix view, Matrix projection, Vector3 viewVector)
+			Matrix view, Matrix projection, Vector3 viewVector, Random rand)
 		{
 			DrawHelper.g = g;
 			DrawHelper.spriteBatch = spriteBatch;
 			DrawHelper.View = view;
 			DrawHelper.Projection = projection;
 			DrawHelper.ViewVector = viewVector;
+			DrawHelper.rand = rand;
 		}
 		#endregion
 
@@ -94,6 +96,23 @@ namespace _3DBalls
 				}
 				mesh.Draw();
 			}
+		}
+
+		#endregion
+
+		#region Other Methods
+
+		/// <summary>
+		/// Returns a shade of color, using a lower/upper bounds which are between 0 and 1
+		/// </summary>
+		/// <param name="color"></param>
+		/// <param name="lowerBound"></param>
+		/// <param name="upperBound"></param>
+		/// <returns></returns>
+		public static Color GetShade(Color color, float lowerBound, float upperBound)
+		{
+			float value = (float)rand.NextDouble() * (upperBound - lowerBound) + lowerBound;
+			return color * value;
 		}
 
 		#endregion
