@@ -83,12 +83,12 @@ namespace _3DBalls
 			#endregion
 
 			#region Effect setup
-			Effect texturedEffect = Content.Load<Effect>(@"Effects/TextureShader");
-			texturedEffect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
-			texturedEffect.Parameters["View"].SetValue(view);
-			texturedEffect.Parameters["Projection"].SetValue(projection);
-			texturedEffect.Parameters["ViewVector"].SetValue(viewVector);
-			texturedEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Invert(Matrix.Transpose(Matrix.CreateTranslation(Vector3.Zero))));
+			Effect specularEffect = Content.Load<Effect>(@"Effects/Specular");
+			specularEffect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
+			specularEffect.Parameters["View"].SetValue(view);
+			specularEffect.Parameters["Projection"].SetValue(projection);
+			specularEffect.Parameters["ViewVector"].SetValue(viewVector);
+			specularEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Invert(Matrix.Transpose(Matrix.CreateTranslation(Vector3.Zero))));
 
 			BasicEffect solidColorEffect = new BasicEffect(graphics.GraphicsDevice);
 			solidColorEffect.EnableDefaultLighting();
@@ -114,6 +114,7 @@ namespace _3DBalls
 			#region Object setup
 
 			Sphere modelSphere = new Sphere(beachBall, ballTexture, Vector3.Zero, 1.9f, effect);
+			#region example wall setup
 			quad1 = new ColoredQuad(Color.Gray, solidColorEffect,
 				new Vector3(0, -20, 20), new Vector3(-20, -20, 20),
 				new Vector3(-20, -20, 0), new Vector3(0, -20, 0));
@@ -128,6 +129,8 @@ namespace _3DBalls
 			walls.Add(quad1);
 			walls.Add(texRect1);
 			walls.Add(quad2);
+
+			#endregion
 
 			ObjManager = new ObjectManager(
 				new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)),

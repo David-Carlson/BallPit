@@ -100,6 +100,7 @@ namespace ShapeTest
 		/// </summary>
 		public void Draw()
 		{
+			#region Deprecated code
 			/*
 			//TODO: Move code to DrawHelper?
 			RasterizerState rasterizerState = new RasterizerState();
@@ -110,11 +111,13 @@ namespace ShapeTest
 			DrawHelper.g.RasterizerState = rasterizerState;
 
 			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-			{
-				
+			{			
 				pass.Apply();
 				DrawHelper.g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);				
 			}*/
+			
+			#endregion			
+
 			DrawHelper.Draw(this);
 		}
 		#endregion
