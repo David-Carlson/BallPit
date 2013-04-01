@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using ShapeTest;
 namespace _3DBalls
 {
 	public static class DrawHelper
@@ -15,6 +15,7 @@ namespace _3DBalls
 		public static Matrix View, Projection;
 		public static Vector3 ViewVector;
 		public static Random rand;
+		private static Vector3 cameraLoc, cameraTarget, upVector;
 		#endregion
 
 		#region Initializer
@@ -64,7 +65,33 @@ namespace _3DBalls
 				pass.Apply();
 				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);
 			}
+		}
 
+		public static void Draw(ColoredQuad quad)
+		{
+			/*
+			Effect effect = quad.Effect;
+			g.SetVertexBuffer(quad.VertexBuffer);
+			g.Indices = quad.IndexBuffer;
+
+			RasterizerState rasterizerState = new RasterizerState();
+			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+			g.RasterizerState = rasterizerState;
+
+			foreach (EffectPass pass in quad.Effect.CurrentTechnique.Passes)
+			{
+				effect.Parameters["World"].SetValue(Matrix.CreateTranslation(quad.Position));
+				effect.Parameters["View"].SetValue(View);
+				effect.Parameters["Projection"].SetValue(Projection);
+				effect.Parameters["ViewVector"].SetValue(ViewVector);
+				effect.Parameters["ModelTexture"].SetValue(quad.Texture);
+
+				Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(Matrix.CreateTranslation(quad.Position)));
+				effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
+				pass.Apply();
+				g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);
+			}//*/
+			throw new NotImplementedException();
 		}
 
 

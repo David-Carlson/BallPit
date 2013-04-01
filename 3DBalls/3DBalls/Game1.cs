@@ -72,10 +72,7 @@ namespace _3DBalls
 			viewVector = Vector3.Normalize(viewVector);
 
 			DrawHelper.Initialize(graphics.GraphicsDevice, spriteBatch, 
-				view, projection, viewVector, new Random());
-
-			
-			
+				view, projection, viewVector, new Random());			
 			#endregion
 
 			#region Content Loading

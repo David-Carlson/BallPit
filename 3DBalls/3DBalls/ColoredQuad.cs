@@ -11,9 +11,9 @@ namespace ShapeTest
 	public class ColoredQuad : IQuadCollidable 
 	{
 		#region Declarations
-		public VertexBuffer vertexBuffer;
-		private IndexBuffer indexBuffer;
-		private Effect effect;
+		public VertexBuffer VertexBuffer;
+		public IndexBuffer IndexBuffer;
+		public Effect Effect;
 
 		public BoundingBox BoundingShape
 		{
@@ -41,8 +41,8 @@ namespace ShapeTest
 			vertices[2] = new VertexPositionColor(bottomRight, color);
 			vertices[3] = new VertexPositionColor(bottomLeft, color);
 
-			vertexBuffer = new VertexBuffer(DrawHelper.g, typeof(VertexPositionColor), 4, BufferUsage.WriteOnly); 
-			vertexBuffer.SetData<VertexPositionColor>(vertices);
+			VertexBuffer = new VertexBuffer(DrawHelper.g, typeof(VertexPositionColor), 4, BufferUsage.WriteOnly); 
+			VertexBuffer.SetData<VertexPositionColor>(vertices);
 
 			short[] indices = new short[6];
 			indices[0] = 0; // TL
@@ -51,8 +51,8 @@ namespace ShapeTest
 			indices[3] = 0; // TL
 			indices[4] = 2; // BR
 			indices[5] = 3; // BL
-			indexBuffer = new IndexBuffer(DrawHelper.g, typeof(short), indices.Length, BufferUsage.WriteOnly);
-			indexBuffer.SetData(indices);
+			IndexBuffer = new IndexBuffer(DrawHelper.g, typeof(short), indices.Length, BufferUsage.WriteOnly);
+			IndexBuffer.SetData(indices);
 		}
 
 		public ColoredQuad(
@@ -60,7 +60,7 @@ namespace ShapeTest
 			Vector3 topLeft, Vector3 topRight,
 			Vector3 bottomRight, Vector3 bottomLeft) : this(color,topLeft, topRight, bottomRight, bottomLeft)
 		{
-			this.effect = effect;
+			this.Effect = effect;
 			Normal = Vector3.Cross(bottomLeft - topLeft, topRight - topLeft);
 			Normal.Normalize();
 
@@ -96,11 +96,11 @@ namespace ShapeTest
 			RasterizerState rasterizerState = new RasterizerState();
 			rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
 
-			DrawHelper.g.SetVertexBuffer(vertexBuffer);
-			DrawHelper.g.Indices = indexBuffer;
+			DrawHelper.g.SetVertexBuffer(VertexBuffer);
+			DrawHelper.g.Indices = IndexBuffer;
 			DrawHelper.g.RasterizerState = rasterizerState;
 
-			foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();
 				DrawHelper.g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4, 0, 2);				
