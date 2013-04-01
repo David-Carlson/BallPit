@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CameraController.cs" />
     <Compile Include="IQuadCollidable.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="DrawHelper.cs" />
