@@ -63,13 +63,19 @@ namespace _3DBalls
 		{
 			#region Matrix Setup and Initializations
 			world = Matrix.CreateTranslation(0, 0, 0);
-			view = Matrix.CreateLookAt(new Vector3(-30, 20, 40), new Vector3(-10, -10, 10), new Vector3(0, 0, 1));
+			Vector3 cameraLoc = new Vector3(30, 30, 30);
+			Vector3 cameraTarget = new Vector3(-10, -10, 10);
+			view = Matrix.CreateLookAt(cameraLoc, cameraTarget, new Vector3(0, 0, 1));
 			projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
 			Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
 			viewVector = -new Vector3(10, 10, 10);
 			viewVector = Vector3.Normalize(viewVector);
 
-			DrawHelper.Initialize(graphics.GraphicsDevice, spriteBatch, view, projection, viewVector, new Random());
+			DrawHelper.Initialize(graphics.GraphicsDevice, spriteBatch, 
+				view, projection, viewVector, new Random());
+
+			
+			
 			#endregion
 
 			#region Content Loading
@@ -81,12 +87,12 @@ namespace _3DBalls
 			#endregion
 
 			#region Effect setup
-			Effect texturedEffect = Content.Load<Effect>(@"Effects/TextureShader");
-			texturedEffect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
-			texturedEffect.Parameters["View"].SetValue(view);
-			texturedEffect.Parameters["Projection"].SetValue(projection);
-			texturedEffect.Parameters["ViewVector"].SetValue(viewVector);
-			texturedEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Invert(Matrix.Transpose(Matrix.CreateTranslation(Vector3.Zero))));
+			Effect specularEffect = Content.Load<Effect>(@"Effects/Specular");
+			specularEffect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
+			specularEffect.Parameters["View"].SetValue(view);
+			specularEffect.Parameters["Projection"].SetValue(projection);
+			specularEffect.Parameters["ViewVector"].SetValue(viewVector);
+			specularEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Invert(Matrix.Transpose(Matrix.CreateTranslation(Vector3.Zero))));
 
 			BasicEffect solidColorEffect = new BasicEffect(graphics.GraphicsDevice);
 			solidColorEffect.EnableDefaultLighting();
@@ -112,6 +118,7 @@ namespace _3DBalls
 			#region Object setup
 
 			Sphere modelSphere = new Sphere(beachBall, ballTexture, Vector3.Zero, 1.9f, effect);
+			#region example wall setup
 			quad1 = new ColoredQuad(Color.Gray, solidColorEffect,
 				new Vector3(0, -20, 20), new Vector3(-20, -20, 20),
 				new Vector3(-20, -20, 0), new Vector3(0, -20, 0));
@@ -126,6 +133,8 @@ namespace _3DBalls
 			walls.Add(quad1);
 			walls.Add(texRect1);
 			walls.Add(quad2);
+
+			#endregion
 
 			ObjManager = new ObjectManager(
 				new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)),
@@ -279,7 +288,7 @@ namespace _3DBalls
 		{
 			// Allows the game to exit
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-				this.Exit();
+				this.Exit();			
 
 			// TODO: Add your update logic here
 
@@ -302,7 +311,8 @@ namespace _3DBalls
 			base.Draw(gameTime);
 		}
 
-		private void DrawModelWithEffect(Model model, Matrix world, Matrix view, Matrix projection)
+		private void DrawModelWithEffect(
+			Model model, Matrix world, Matrix view, Matrix projection)
 		{
 			foreach (ModelMesh mesh in model.Meshes)
 			{
