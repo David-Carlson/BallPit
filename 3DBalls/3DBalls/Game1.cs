@@ -134,10 +134,13 @@ namespace _3DBalls
 			#endregion
 
 			ObjManager = new ObjectManager(
-				new BoundingBox(new Vector3(0, 0, 0), new Vector3(20, 20, 20)),
+				new BoundingBox(new Vector3(-20, -20, 0), new Vector3(0, 0, 20)),
 				getShadedColoredWallList(Color.Red, solidColorEffect, Vector3.Zero, new Vector3(-20, -20, 20)),
 				modelSphere,
 				10f);
+
+			ObjManager.AddSphere(1.9f, new Vector3(-10, -10, 10), new Vector3(0, 0, 0));
+			ObjManager.AddNextSpheres();
 
 			#endregion
 
@@ -167,48 +170,53 @@ namespace _3DBalls
 		/// <returns></returns>
 		private List<IQuadCollidable> getShadedColoredWallList(
 			Color color, Effect effect, 
-			Vector3 pos, Vector3 dim)
+			Vector3 position, Vector3 oppositeCornerVec)
 		{
+			Vector3 pos = position; 
+			Vector3 dim = oppositeCornerVec;
+
+			float lowerShade = 0.25f;
+			float upperShade = 0.75f;
 			List<IQuadCollidable> walls = new List<IQuadCollidable>();			
 
 			//Faces -X direction
 			walls.Add(new ColoredQuad(
-				DrawHelper.GetShade(color, 0, 1), 
+				DrawHelper.GetShade(color, lowerShade, upperShade), 
 				effect, 
 				new Vector3(0, 0, dim.Z) + pos, new Vector3(0, dim.Y, dim.Z) + pos, 
 				new Vector3(0, dim.Y, 0) + pos, new Vector3(0, 0, 0) + pos));
 
 			// Faces +Y direction
 			walls.Add(new ColoredQuad(
-				DrawHelper.GetShade(color, 0, 1), 
+				DrawHelper.GetShade(color, lowerShade, upperShade), 
 				effect,
 				new Vector3(0, dim.Y, dim.Z) + pos, new Vector3(dim.X, dim.Y, dim.Z) + pos, 
 				new Vector3(dim.X, dim.Y, 0) + pos, new Vector3(0, dim.Y, 0) + pos));
 
 			// Faces X Direction
 			walls.Add(new ColoredQuad(
-				DrawHelper.GetShade(color, 0, 1), 
+				DrawHelper.GetShade(color, lowerShade, upperShade), 
 				effect,
 				new Vector3(dim.X, dim.Y, dim.Z) + pos, new Vector3(dim.X, 0, dim.Z) + pos,
 				new Vector3(dim.X, 0, 0) + pos, new Vector3(dim.X, dim.Y, 0) + pos));
 
 			// Faces -Y Direction
 			walls.Add(new ColoredQuad(
-				DrawHelper.GetShade(color, 0, 1), 
+				DrawHelper.GetShade(color, lowerShade, upperShade), 
 				effect,
 				new Vector3(dim.X, 0, dim.Z) + pos, new Vector3(0, 0, dim.Z) + pos, 
 				new Vector3(0, 0, 0) + pos, new Vector3(dim.X, 0, 0) + pos));
 
 			// Faces +Z Direction (Floor)
 			walls.Add(new ColoredQuad(
-				DrawHelper.GetShade(color, 0, 1), 
+				DrawHelper.GetShade(color, lowerShade, upperShade), 
 				effect, 
 				new Vector3(0, 0, 0) + pos, new Vector3(0, dim.Y, 0) + pos, 
 				new Vector3(dim.X, dim.Y, 0) + pos, new Vector3(dim.X, 0, 0) + pos));
 
 			// Faces -Z Direction (Ceiling)
 			walls.Add(new ColoredQuad(
-				DrawHelper.GetShade(color, 0, 1), 
+				DrawHelper.GetShade(color, lowerShade, upperShade), 
 				effect,
 				new Vector3(0, dim.Y, dim.Z) + pos, new Vector3(0, 0, dim.Z) + pos, 
 				new Vector3(dim.X, 0, dim.Z) + pos, new Vector3(dim.X, dim.Y, dim.Z) + pos));
@@ -285,7 +293,8 @@ namespace _3DBalls
 		{
 			// Allows the game to exit
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-				this.Exit();			
+				this.Exit();
+			ObjManager.Update(gameTime);
 
 			// TODO: Add your update logic here
 

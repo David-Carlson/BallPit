@@ -20,7 +20,7 @@ namespace _3DBalls
 			get{ return this.position; }
 			set{ this.position = value; BoundingShape.Center = value; }
 		}
-		public Vector3 Velocity;
+		public Vector3 Velocity = new Vector3(0, 0, 0);
 		public static Vector3 Acceleration = new Vector3(0, 0, -.5f);
 		public BoundingSphere BoundingShape;
 		public float mass = 1f;
@@ -41,17 +41,22 @@ namespace _3DBalls
 
 		#endregion
 
-		#region Public Methods
+		#region Update & Draw Methods
 		public void Update(GameTime gameTime)
 		{
 			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			Console.WriteLine("Position: " + Position.ToString());
 			Position += Velocity * elapsed;
-			Velocity += Acceleration * elapsed;		
+			Velocity += Acceleration * elapsed;	
 		}
 
 		public void Draw()
 		{
-			DrawHelper.DrawModelWithEffect(model, texture, Matrix.CreateTranslation(Position), effect);
+			DrawHelper.DrawModelWithEffect(
+				model, 
+				texture, 
+				Matrix.CreateTranslation(Position), 
+				effect);
 		}
 
 		#endregion

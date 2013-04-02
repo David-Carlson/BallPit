@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace _3DBalls
 {
@@ -51,7 +52,7 @@ namespace _3DBalls
 			// Get the X component, this will relatively rotate the camera around
 			angularAcceleration = padState.ThumbSticks.Right.X;
 			if (angularAcceleration != 0)
-				Console.WriteLine(angularAcceleration);//*/
+				Console.WriteLine(angularAcceleration);
 
 			Angle += angularAcceleration * elapsed;
 			Console.WriteLine("Angle = " + Angle);

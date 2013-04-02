@@ -42,7 +42,7 @@ namespace _3DBalls
 		/// <summary>
 		/// Adds the next spheres to the spheres in play list
 		/// </summary>
-		public void AddNextSphere()
+		public void AddNextSpheres()
 		{
 			if (nextSpheresToAdd.Count > 0)
 			{
@@ -219,6 +219,9 @@ namespace _3DBalls
 		{
 			foreach (Sphere sphere in spheres)
 				sphere.Update(gameTime);
+			CheckSphereToSphereCollisions();
+			CheckSphereToWallCollisions();
+			
 		}
 
 		/// <summary>
