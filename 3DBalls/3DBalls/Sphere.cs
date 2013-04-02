@@ -21,7 +21,7 @@ namespace _3DBalls
 			set{ this.position = value; BoundingShape.Center = value; }
 		}
 		public Vector3 Velocity = new Vector3(0, 0, 0);
-		public static Vector3 Acceleration = new Vector3(0, 0, -.5f);
+		public static Vector3 Acceleration = new Vector3(0, 0, -40);
 		public BoundingSphere BoundingShape;
 		public float mass = 1f;
 		#endregion

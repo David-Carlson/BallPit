@@ -77,12 +77,13 @@ namespace _3DBalls
 			Sphere newSphere = spherePlaceHolder.Clone();
 			newSphere.BoundingShape = temp;
 			newSphere.Position = position;
+			/*
 			float xSpeed = rand.Next(-1, 1);
 			float ySpeed = rand.Next(-1, 1);
 			float zSpeed = rand.Next(-1, 1);
 			Vector3 newVelocity = new Vector3(xSpeed, ySpeed, zSpeed);
-			newVelocity = Vector3.Normalize(newVelocity) * sphere_initialSpeed;
-			newSphere.Velocity = newVelocity;
+			newVelocity = Vector3.Normalize(newVelocity) * sphere_initialSpeed;//*/
+			newSphere.Velocity = velocity;
 
 			nextSpheresToAdd.Add(newSphere);
 		}
@@ -219,8 +220,8 @@ namespace _3DBalls
 		{
 			foreach (Sphere sphere in spheres)
 				sphere.Update(gameTime);
-			CheckSphereToSphereCollisions();
-			CheckSphereToWallCollisions();
+			//CheckSphereToSphereCollisions();
+			//CheckSphereToWallCollisions();
 			
 		}
 
