@@ -221,7 +221,7 @@ namespace _3DBalls
 			foreach (Sphere sphere in spheres)
 				sphere.Update(gameTime);
 			//CheckSphereToSphereCollisions();
-			//CheckSphereToWallCollisions();
+			CheckSphereToWallCollisions();
 			
 		}
 

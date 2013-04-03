@@ -36,6 +36,7 @@ namespace _3DBalls
 		Vector3 viewVector;
 		#endregion
 
+		#region Unused/Unwanted :(
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -54,6 +55,38 @@ namespace _3DBalls
 
 			base.Initialize();
 		}
+
+		/// <summary>
+		/// UnloadContent will be called once per game and is the place to unload
+		/// all content.
+		/// </summary>
+		protected override void UnloadContent()
+		{
+			// TODO: Unload any non ContentManager content here
+		}
+
+		private void DrawModelWithEffect(
+			Model model, Matrix world, Matrix view, Matrix projection)
+		{
+			foreach (ModelMesh mesh in model.Meshes)
+			{
+				foreach (ModelMeshPart part in mesh.MeshParts)
+				{
+					part.Effect = effect;
+					effect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
+					effect.Parameters["View"].SetValue(view);
+					effect.Parameters["Projection"].SetValue(projection);
+					effect.Parameters["ViewVector"].SetValue(viewVector);
+					effect.Parameters["ModelTexture"].SetValue(ballTexture);
+
+					Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(mesh.ParentBone.Transform * world));
+					effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
+				}
+				mesh.Draw();
+			}
+		}
+
+		#endregion
 
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
@@ -116,26 +149,30 @@ namespace _3DBalls
 
 			Sphere modelSphere = new Sphere(beachBall, ballTexture, Vector3.Zero, 1.9f, effect);
 			#region example wall setup
-			quad1 = new ColoredQuad(Color.Gray, solidColorEffect,
+			/*quad1 = new ColoredQuad(Color.Gray, solidColorEffect,
 				new Vector3(0, -20, 20), new Vector3(-20, -20, 20),
 				new Vector3(-20, -20, 0), new Vector3(0, -20, 0));
 			texRect1 = new TexturedCollidableQuad(abyssTexture, textureEffect,
 				new Vector3(-20, -20, 20), new Vector3(-20, 0, 20),
 				new Vector3(-20, 0, 0), new Vector3(-20, -20, 0));
-			ColoredQuad quad2 = new ColoredQuad(Color.Gray*.5f, solidColorEffect,
+			/*ColoredQuad quad2 = new ColoredQuad(Color.Gray*.5f, solidColorEffect,
 				new Vector3(0, 0, 20), new Vector3(0, -20, 20),
-				new Vector3(0, -20, 0), new Vector3(0, 0, 0));
+				new Vector3(0, -20, 0), new Vector3(0, 0, 0));*/
+
+			ColoredQuad upFacing = new ColoredQuad(
+				DrawHelper.GetShade(Color.Gray, .7f, .8f),
+				solidColorEffect,
+				new Vector3(0, 0, 0), new Vector3(0, -20, 0),
+				new Vector3(-20, -20, 0), new Vector3(-20, 0, 0));
 
 			List<IQuadCollidable> walls = new List<IQuadCollidable>();
-			walls.Add(quad1);
-			walls.Add(texRect1);
-			walls.Add(quad2);
+			walls.Add(upFacing);
 
 			#endregion
-
+			//getShadedColoredWallList(Color.Red, solidColorEffect, Vector3.Zero, new Vector3(-20, -20, 20))
 			ObjManager = new ObjectManager(
 				new BoundingBox(new Vector3(-20, -20, 0), new Vector3(0, 0, 20)),
-				getShadedColoredWallList(Color.Red, solidColorEffect, Vector3.Zero, new Vector3(-20, -20, 20)),
+				walls,
 				modelSphere,
 				10f);
 
@@ -274,16 +311,7 @@ namespace _3DBalls
 		}
 
 		#endregion
-
-		/// <summary>
-		/// UnloadContent will be called once per game and is the place to unload
-		/// all content.
-		/// </summary>
-		protected override void UnloadContent()
-		{
-			// TODO: Unload any non ContentManager content here
-		}
-
+				
 		/// <summary>
 		/// Allows the game to run logic such as updating the world,
 		/// checking for collisions, gathering input, and playing audio.
@@ -294,9 +322,8 @@ namespace _3DBalls
 			// Allows the game to exit
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
 				this.Exit();
-			ObjManager.Update(gameTime);
 
-			// TODO: Add your update logic here
+			ObjManager.Update(gameTime);
 
 			base.Update(gameTime);
 		}
@@ -317,26 +344,7 @@ namespace _3DBalls
 			base.Draw(gameTime);
 		}
 
-		private void DrawModelWithEffect(
-			Model model, Matrix world, Matrix view, Matrix projection)
-		{
-			foreach (ModelMesh mesh in model.Meshes)
-			{
-				foreach (ModelMeshPart part in mesh.MeshParts)
-				{
-					part.Effect = effect;
-					effect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
-					effect.Parameters["View"].SetValue(view);
-					effect.Parameters["Projection"].SetValue(projection);
-					effect.Parameters["ViewVector"].SetValue(viewVector);
-					effect.Parameters["ModelTexture"].SetValue(ballTexture);
-
-					Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(mesh.ParentBone.Transform * world));
-					effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
-				}
-				mesh.Draw();
-			}
-		}
+		
 
 	}
 }

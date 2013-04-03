@@ -62,7 +62,7 @@ namespace ShapeTest
 		{
 			this.Effect = effect;
 			Normal = Vector3.Cross(bottomLeft - topLeft, topRight - topLeft);
-			Normal.Normalize();
+			Normal = Vector3.Normalize(Normal);
 
 			//I extruded the corners out in the opposite direction of the normal so I have all 8 corners saved in memory
 			Vector3 tL, tR, bR, bL;
