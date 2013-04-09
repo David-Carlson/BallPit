@@ -149,6 +149,25 @@ namespace _3DBalls
 		/// Checks for active balls hitting walls
 		/// Doesn't reflect if the ball isn't travelling towards the wall (aka I fucked up in the previous frame)
 		/// </summary>
+		private void CheckNaiveSphereToWallCollisions()
+		{
+			foreach (Sphere sphere in spheres)
+			{
+				foreach (IQuadCollidable wall in walls)
+				{
+					if (sphere.BoundingShape.Intersects(wall.BoundingShape))
+					{
+						// V' = V -2N(N * V)
+						// Basic reflection of vector over normal
+						float reflection = Vector3.Dot(wall.Normal, sphere.Velocity);
+						if (reflection >= 0)
+							continue;
+						sphere.Velocity = sphere.Velocity - 2 * wall.Normal * (reflection);
+					}
+				}
+			}
+		}
+		
 		private void CheckSphereToWallCollisions()
 		{
 			foreach (Sphere sphere in spheres)
@@ -157,6 +176,8 @@ namespace _3DBalls
 				{
 					if (sphere.BoundingShape.Intersects(wall.BoundingShape))
 					{
+						// Below code is fine, but first REVERSE TIME
+
 						// V' = V -2N(N * V)
 						// Basic reflection of vector over normal
 						float reflection = Vector3.Dot(wall.Normal, sphere.Velocity);
@@ -221,7 +242,7 @@ namespace _3DBalls
 			foreach (Sphere sphere in spheres)
 				sphere.Update(gameTime);
 			//CheckSphereToSphereCollisions();
-			CheckSphereToWallCollisions();
+			CheckNaiveSphereToWallCollisions();
 			
 		}
 

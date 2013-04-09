@@ -14,6 +14,7 @@ namespace _3DBalls
 		private Texture2D texture;
 		private Effect effect;
 		private Vector3 position;
+		public static bool accurateUpdate = false;
 
 		public Vector3 Position
 		{
@@ -45,9 +46,26 @@ namespace _3DBalls
 		public void Update(GameTime gameTime)
 		{
 			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-			Console.WriteLine("Position: " + Position.ToString());
-			Position += Velocity * elapsed;
-			Velocity += Acceleration * elapsed;	
+			if (true)
+			{				
+				Console.WriteLine("Position: " + position.ToString());
+				// d = v*t + 1/2*a*t^2
+				position += Velocity * elapsed + Acceleration * elapsed * elapsed / 2;
+				/*
+				position.X += Velocity.X * elapsed; // + 1/2 a t^2
+				position.Y += Velocity.Y * elapsed;
+				position.Z += Velocity.Z * elapsed +
+					Acceleration.Z * elapsed * elapsed / 2;*/
+
+				Velocity.X = Velocity.X * elapsed;
+
+			}
+			else
+			{				
+				Position += Velocity * elapsed;
+				Velocity += Acceleration * elapsed;
+			}
+			
 		}
 
 		public void Draw()

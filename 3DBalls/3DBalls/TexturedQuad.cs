@@ -20,6 +20,7 @@ namespace _3DBalls
 		#endregion
 
 		#region Constructor
+		
 		public TexturedQuad(
 			Texture2D texture, Effect effect, 
 			Vector3 topLeft, Vector3 topRight, 
@@ -27,6 +28,7 @@ namespace _3DBalls
 		{
 			this.Texture = texture;
 			this.effect = effect;
+			
 			
 			VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[4];
 			
