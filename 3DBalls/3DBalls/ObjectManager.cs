@@ -23,6 +23,7 @@ namespace _3DBalls
 		private List<Sphere> nextSpheresToAdd = new List<Sphere>();
 
 		private Random rand = new Random();
+		float time = 10f;
 		#endregion
 
 		#region Constructor
@@ -107,7 +108,7 @@ namespace _3DBalls
 				float yPos = (float)rand.NextDouble() * (playingArea.Max.Y - playingArea.Min.Y) + playingArea.Min.Y;
 				float zPos = (float)rand.NextDouble() * (playingArea.Max.Z - playingArea.Min.Z) + playingArea.Min.Z;
 				Vector3 newPosition = new Vector3(xPos, yPos, zPos);
-				BoundingSphere tempBounds = new BoundingSphere(newPosition, (playingArea.Max.X - playingArea.Min.X) / 2f);
+				BoundingSphere tempBounds = new BoundingSphere(newPosition, 1.9f);
 
 				//Tests if it collides with existing balls
 				foreach (Sphere sphere in spheres)
@@ -239,10 +240,20 @@ namespace _3DBalls
 
 		public void Update(GameTime gameTime)
 		{
+			/*time -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+			if (time < 0)
+			{
+				if (this.spheres.Count < 10)
+				{
+					AddRandomSpheres(1);
+					time = 10f;
+				}				
+			}*/
 			foreach (Sphere sphere in spheres)
 				sphere.Update(gameTime);
-			//CheckSphereToSphereCollisions();
+			
 			CheckNaiveSphereToWallCollisions();
+			CheckSphereToSphereCollisions();
 			
 		}
 

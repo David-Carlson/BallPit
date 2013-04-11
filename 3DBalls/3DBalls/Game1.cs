@@ -96,7 +96,7 @@ namespace _3DBalls
 		{
 			#region Matrix Setup and Initializations
 			world = Matrix.CreateTranslation(0, 0, 0);
-			Vector3 cameraLoc = new Vector3(15, 15, 10);
+			Vector3 cameraLoc = new Vector3(30, 30, 10);
 			Vector3 cameraTarget = new Vector3(-10, -10, 10);
 			view = Matrix.CreateLookAt(cameraLoc, cameraTarget, new Vector3(0, 0, 1));
 			projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 16f / 9f, 0.01f, 100f);
@@ -177,6 +177,7 @@ namespace _3DBalls
 				10f);
 
 			ObjManager.AddSphere(1.9f, new Vector3(-10, -10, 10), new Vector3(0, 0, -9));
+			ObjManager.AddSphere(1.9f, new Vector3(-10, -10, 15), new Vector3(0, -20, 0));
 			ObjManager.AddNextSpheres();
 
 			#endregion

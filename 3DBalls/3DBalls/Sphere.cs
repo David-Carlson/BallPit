@@ -14,8 +14,6 @@ namespace _3DBalls
 		private Texture2D texture;
 		private Effect effect;
 		private Vector3 position;
-		public static bool accurateUpdate = false;
-
 		public Vector3 Position
 		{
 			get{ return this.position; }
@@ -25,6 +23,7 @@ namespace _3DBalls
 		public static Vector3 Acceleration = new Vector3(0, 0, -40);
 		public BoundingSphere BoundingShape;
 		public float mass = 1f;
+		public float high = 0;
 		#endregion
 
 		#region Constructors
@@ -46,26 +45,16 @@ namespace _3DBalls
 		public void Update(GameTime gameTime)
 		{
 			float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-			if (true)
-			{				
-				Console.WriteLine("Position: " + position.ToString());
-				// d = v*t + 1/2*a*t^2
-				position += Velocity * elapsed + Acceleration * elapsed * elapsed / 2;
-				/*
-				position.X += Velocity.X * elapsed; // + 1/2 a t^2
-				position.Y += Velocity.Y * elapsed;
-				position.Z += Velocity.Z * elapsed +
-					Acceleration.Z * elapsed * elapsed / 2;*/
-
-				Velocity.X = Velocity.X * elapsed;
-
-			}
-			else
-			{				
-				Position += Velocity * elapsed;
-				Velocity += Acceleration * elapsed;
-			}
 			
+			// d = v*t + 1/2*a*t^2
+			Position += Velocity * elapsed + Acceleration * elapsed * elapsed / 2;
+			Velocity = Velocity + Acceleration * elapsed;
+			
+			/*
+			Position += Velocity * elapsed;
+			Velocity += Acceleration * elapsed;
+			 * Euler integration, shitty for parabolas and everything else too
+			*/		
 		}
 
 		public void Draw()
