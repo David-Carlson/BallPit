@@ -176,9 +176,11 @@ namespace _3DBalls
 				modelSphere,
 				10f);
 
-			ObjManager.AddSphere(1.9f, new Vector3(-10, -10, 10), new Vector3(0, 0, -9));
+			ObjManager.AddSphere(1.9f, new Vector3(-10, -10, 10), new Vector3(5, 0, -9));
 			ObjManager.AddSphere(1.9f, new Vector3(-10, -10, 15), new Vector3(0, -20, 0));
 			ObjManager.AddNextSpheres();
+
+			ObjManager.AddRandomSpheres(2);
 
 			#endregion
 

@@ -64,6 +64,7 @@ namespace _3DBalls
 		{
 			BoundingSphere temp = new BoundingSphere(position, radius);
 			
+			/*
 			foreach (Sphere sphere in spheres)
 			{
 				if (sphere.BoundingShape.Intersects(temp))
@@ -73,20 +74,39 @@ namespace _3DBalls
 			{
 				if (sphere.BoundingShape.Intersects(temp))
 					return;
-			}
+			}*/
+			if (CollidesWithObjects(temp))
+				return;
+
 
 			Sphere newSphere = spherePlaceHolder.Clone();
 			newSphere.BoundingShape = temp;
-			newSphere.Position = position;
-			/*
-			float xSpeed = rand.Next(-1, 1);
-			float ySpeed = rand.Next(-1, 1);
-			float zSpeed = rand.Next(-1, 1);
-			Vector3 newVelocity = new Vector3(xSpeed, ySpeed, zSpeed);
-			newVelocity = Vector3.Normalize(newVelocity) * sphere_initialSpeed;//*/
+			newSphere.Position = position;			
 			newSphere.Velocity = velocity;
 
 			nextSpheresToAdd.Add(newSphere);
+		}
+
+		private bool CollidesWithObjects(BoundingSphere tempBounds)
+		{
+			foreach (Sphere sphere in spheres)
+			{
+				if (sphere.BoundingShape.Intersects(tempBounds))
+				{
+					return true;
+				}
+			}
+			foreach (Sphere sphere in nextSpheresToAdd)
+			{
+				if (sphere.BoundingShape.Intersects(tempBounds))
+					return true;
+			}
+			foreach (IQuadCollidable wall in walls)
+			{
+				if (wall.BoundingShape.Intersects(tempBounds))
+					return true;
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -108,29 +128,24 @@ namespace _3DBalls
 				float yPos = (float)rand.NextDouble() * (playingArea.Max.Y - playingArea.Min.Y) + playingArea.Min.Y;
 				float zPos = (float)rand.NextDouble() * (playingArea.Max.Z - playingArea.Min.Z) + playingArea.Min.Z;
 				Vector3 newPosition = new Vector3(xPos, yPos, zPos);
-				BoundingSphere tempBounds = new BoundingSphere(newPosition, 1.9f);
+				BoundingSphere tempBounds = new BoundingSphere(newPosition, 2f);
 
-				//Tests if it collides with existing balls
-				foreach (Sphere sphere in spheres)
+				// If it collides with an existing object, try again
+				if (CollidesWithObjects(tempBounds))
 				{
-					if (sphere.BoundingShape.Intersects(tempBounds))
-					{
-						attempts++;
-						continue; //TODO: CHECK IF THIS IS POSSIBLE
-					}
+					attempts++;
+					continue;
 				}
-				foreach (Sphere sphere in nextSpheresToAdd)
-				{
-					if (sphere.BoundingShape.Intersects(tempBounds))
-						return;
-				}
-				//It works! Now fill it up with a random velocity and such
+
+				//It fits in the box! Now give the ball a random velocity and such
 				Sphere newSphere = spherePlaceHolder.Clone();
 				newSphere.BoundingShape = tempBounds;
+				newSphere.Position = newPosition;
 
-				float xSpeed = rand.Next(-1, 1);
-				float ySpeed = rand.Next(-1, 1);
-				float zSpeed = rand.Next(-1, 1);
+
+				float xSpeed = (float)rand.NextDouble() * 2 - 1;
+				float ySpeed = (float)rand.NextDouble() * 2 - 1;
+				float zSpeed = (float)rand.NextDouble() * 2 - 1;
 				Vector3 newVelocity = new Vector3(xSpeed, ySpeed, zSpeed);
 				newVelocity = Vector3.Normalize(newVelocity) * sphere_initialSpeed;
 				newSphere.Velocity = newVelocity;
@@ -249,6 +264,8 @@ namespace _3DBalls
 					time = 10f;
 				}				
 			}*/
+
+			AddNextSpheres();
 			foreach (Sphere sphere in spheres)
 				sphere.Update(gameTime);
 			
